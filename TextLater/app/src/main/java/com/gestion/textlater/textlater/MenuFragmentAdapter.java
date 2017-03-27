@@ -19,16 +19,28 @@ public class MenuFragmentAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if(position == 0){
-
+            return new HistorialFragment();
         }else{
-
+            return new LeerMensajesFragment();
         }
 
-        return null;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return 2;
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        switch (position){
+            case 0:
+                return mContext.getString(R.string.Leer);
+
+            default:
+                return mContext.getString(R.string.Historial);
+
+        }
+
     }
 }

@@ -8,4 +8,8 @@
     <string name="destinatario">Destinatario</string>
     <string name="Mensaje">Mensaje...</string>
     <string name="Asunto">Asunto</string>
+    <string name="Leer">Leer</string>
+    <string name="Historial">Historial</string>
+
+
 </resources>

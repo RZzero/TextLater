@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':android-floating-acting-button-master'
+project(':android-floating-acting-button-master').projectDir = new File('libs/android-floating-acting-button-master')

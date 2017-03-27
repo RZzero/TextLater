@@ -23,11 +23,15 @@
     <include layout="@layout/content_enviar_mensaje" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_send"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:elevation="6dp"
+        android:src="@android:drawable/ic_dialog_email"
+        app:pressedTranslationZ="12dp" />
+
+    <!--app:srcCompat="@android:drawable/ic_dialog_email"-->
 
 </android.support.design.widget.CoordinatorLayout>

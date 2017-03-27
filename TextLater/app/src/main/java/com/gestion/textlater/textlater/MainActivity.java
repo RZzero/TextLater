@@ -9,10 +9,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
-import static android.R.attr.value;
 
 public class MainActivity extends AppCompatActivity {
+
+    FloatingActionButton fabEnviar, fabGmail, fabTelegram;
+    Animation FabOpen, FabClose, FabRClockwise, FabRantiClockwise;
+    boolean isOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,15 +26,40 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        fabEnviar = (FloatingActionButton) findViewById(R.id.fab_send);
+        fabGmail = (FloatingActionButton) findViewById(R.id.fab_gmail);
+        fabTelegram = (FloatingActionButton) findViewById(R.id.fab_telegram);
+
+        FabOpen = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
+        FabClose = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
+        FabRClockwise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_clockwise);
+        FabRantiClockwise = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate_anticlockwise);
+
+
+        fabEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
               /*  Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();*/
-                Intent myIntent = new Intent(MainActivity.this, EnviarMensajeActivity.class);
+                /*Intent myIntent = new Intent(MainActivity.this, EnviarMensajeActivity.class);
                 myIntent.putExtra("key", value); //Optional parameters
-                MainActivity.this.startActivity(myIntent);
+                MainActivity.this.startActivity(myIntent);*/
+
+                if(isOpen){
+                    fabGmail.startAnimation(FabClose);
+                    fabTelegram.startAnimation(FabClose);
+                    fabEnviar.startAnimation(FabRantiClockwise);
+                    fabGmail.setClickable(false);
+                    fabTelegram.setClickable(false);
+                    isOpen = false  ;
+                }else {
+                    fabGmail.startAnimation(FabOpen);
+                    fabTelegram.startAnimation(FabOpen);
+                    fabEnviar.startAnimation(FabRClockwise);
+                    fabGmail.setClickable(true);
+                    fabTelegram.setClickable(true);
+                    isOpen = true;
+                }
             }
         });
     }

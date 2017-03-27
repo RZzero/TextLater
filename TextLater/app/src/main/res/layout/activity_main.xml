@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.gestion.textlater.textlater.MainActivity">
@@ -21,34 +21,33 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
-
+    <include layout="@layout/content_main"/>
 
     <android.support.design.widget.FloatingActionButton
-    android:id="@+id/fab_telegram"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="bottom|end"
-    android:layout_marginRight="@dimen/fab_margin"
-    android:layout_marginBottom="140dp"
-    android:elevation="6dp"
-    android:src="@android:drawable/ic_dialog_dialer"
-    app:pressedTranslationZ="12dp"
-    app:backgroundTint="@color/black_semi_transparent"
-    android:visibility="invisible"/>
+        android:id="@+id/fab_telegram"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="140dp"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:elevation="6dp"
+        android:src="@android:drawable/ic_dialog_dialer"
+        android:visibility="invisible"
+        app:backgroundTint="@color/black_semi_transparent"
+        app:pressedTranslationZ="12dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_gmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginRight="@dimen/fab_margin"
         android:layout_marginBottom="80dp"
+        android:layout_marginRight="@dimen/fab_margin"
         android:elevation="6dp"
         android:src="@android:drawable/ic_dialog_alert"
-        app:pressedTranslationZ="12dp"
+        android:visibility="invisible"
         app:backgroundTint="@color/blue_semi_transparent"
-        android:visibility="invisible"/>
+        app:pressedTranslationZ="12dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_send"

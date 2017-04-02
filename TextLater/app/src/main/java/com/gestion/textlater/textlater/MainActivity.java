@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         appbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(appbar);
 
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_share);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -71,20 +71,17 @@ public class MainActivity extends AppCompatActivity {
                         Fragment fragment = null;
 
                         switch (menuItem.getItemId()) {
-                            case R.id.nav_camera:
+                            case R.id.nav_configuracion:
                                 fragment = new LeerMensajesFragment();
                                 fragmentTransaction = true;
                                 break;
-                            case R.id.nav_gallery:
+                            case R.id.nav_nosotros:
                                 fragment = new HistorialFragment();
                                 fragmentTransaction = true;
                                 break;
-                            case R.id.nav_manage:
+                            case R.id.nav_sendFeedBack:
                                 fragment = new LeerMensajesFragment();
                                 fragmentTransaction = true;
-                                break;
-                            case R.id.nav_send:
-                                Log.i("NavigationView", "Pulsada opción 1");
                                 break;
                             case R.id.nav_slideshow:
                                 Log.i("NavigationView", "Pulsada opción 2");

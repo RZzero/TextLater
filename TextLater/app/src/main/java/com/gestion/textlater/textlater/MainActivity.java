@@ -3,11 +3,16 @@ package com.gestion.textlater.textlater;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +21,11 @@ import android.view.animation.AnimationUtils;
 
 
 public class MainActivity extends AppCompatActivity {
+
+
+    private Toolbar appbar;
+    private DrawerLayout drawerLayout;
+    private NavigationView navView;
 
     FloatingActionButton fabEnviar, fabGmail, fabTelegram;
     Animation FabOpen, FabClose, FabRClockwise, FabRantiClockwise;
@@ -42,6 +52,60 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
 
+        appbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(appbar);
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_share);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+
+        navView = (NavigationView) findViewById(R.id.navview);
+        navView.setNavigationItemSelectedListener(
+                new NavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+                        boolean fragmentTransaction = false;
+                        Fragment fragment = null;
+
+                        switch (menuItem.getItemId()) {
+                            case R.id.nav_camera:
+                                fragment = new LeerMensajesFragment();
+                                fragmentTransaction = true;
+                                break;
+                            case R.id.nav_gallery:
+                                fragment = new HistorialFragment();
+                                fragmentTransaction = true;
+                                break;
+                            case R.id.nav_manage:
+                                fragment = new LeerMensajesFragment();
+                                fragmentTransaction = true;
+                                break;
+                            case R.id.nav_send:
+                                Log.i("NavigationView", "Pulsada opción 1");
+                                break;
+                            case R.id.nav_slideshow:
+                                Log.i("NavigationView", "Pulsada opción 2");
+                                break;
+                        }
+
+                        if (fragmentTransaction) {
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.viewpager, fragment)
+                                    .commit();
+
+                            menuItem.setChecked(true);
+                            getSupportActionBar().setTitle(menuItem.getTitle());
+                        }
+
+                        drawerLayout.closeDrawers();
+
+                        return true;
+                    }
+                });
+
 
         fabEnviar = (FloatingActionButton) findViewById(R.id.fab_send);
         fabGmail = (FloatingActionButton) findViewById(R.id.fab_gmail);
@@ -62,14 +126,14 @@ public class MainActivity extends AppCompatActivity {
                 myIntent.putExtra("key", value); //Optional parameters
                 MainActivity.this.startActivity(myIntent);*/
 
-                if(isOpen){
+                if (isOpen) {
                     fabGmail.startAnimation(FabClose);
                     fabTelegram.startAnimation(FabClose);
                     fabEnviar.startAnimation(FabRantiClockwise);
                     fabGmail.setClickable(false);
                     fabTelegram.setClickable(false);
-                    isOpen = false  ;
-                }else {
+                    isOpen = false;
+                } else {
                     fabGmail.startAnimation(FabOpen);
                     fabTelegram.startAnimation(FabOpen);
                     fabEnviar.startAnimation(FabRClockwise);
@@ -96,8 +160,13 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(GravityCompat.START);
+                return true;
+            case R.id.action_settings:
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

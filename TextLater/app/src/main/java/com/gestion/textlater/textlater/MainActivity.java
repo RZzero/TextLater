@@ -145,6 +145,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void telegramEnviar (View view) {
+        Intent i = new Intent(MainActivity.this, EnviarMensajeActivity.class);
+        i.putExtra("id", "telegram");
+        startActivity(i);
+    }
+
+    public void gmailEnviar(View view){
+        Intent i = new Intent(MainActivity.this, EnviarMensajeActivity.class);
+        i.putExtra("id", "gmail");
+        startActivity(i);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

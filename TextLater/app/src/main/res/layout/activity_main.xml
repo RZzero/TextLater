@@ -1,7 +1,6 @@
-<android.support.v4.widget.DrawerLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,10 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.gestion.textlater.textlater.MainActivity">
+
         <FrameLayout
             android:id="@+id/content_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -65,9 +66,10 @@
             android:layout_marginBottom="140dp"
             android:layout_marginRight="@dimen/fab_margin"
             android:elevation="6dp"
-            android:src="@android:drawable/ic_dialog_dialer"
+            android:onClick="telegramEnviar"
+            android:src="@drawable/telegram"
             android:visibility="invisible"
-            app:backgroundTint="@color/black_semi_transparent"
+            app:backgroundTint="@color/telegram"
             app:pressedTranslationZ="12dp" />
 
         <android.support.design.widget.FloatingActionButton
@@ -78,9 +80,10 @@
             android:layout_marginBottom="80dp"
             android:layout_marginRight="@dimen/fab_margin"
             android:elevation="6dp"
-            android:src="@android:drawable/ic_dialog_alert"
+            android:onClick="gmailEnviar"
+            android:src="@drawable/gmail"
             android:visibility="invisible"
-            app:backgroundTint="@color/blue_semi_transparent"
+            app:backgroundTint="@color/gmail"
             app:pressedTranslationZ="12dp" />
 
         <android.support.design.widget.FloatingActionButton
@@ -100,8 +103,8 @@
         android:id="@+id/navview"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         android:layout_gravity="start"
+        android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_menu"
         app:menu="@menu/activity_menu_drawer" />
 

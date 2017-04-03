@@ -1,5 +1,7 @@
 package com.gestion.textlater.textlater;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -87,7 +89,13 @@ public class MenuActivity extends AppCompatActivity
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_sendFeedBack) {
+            final String url = "https://docs.google.com/forms/d/e/1FAIpQLScmQffr9p2As0DdHIkQdEn9c7G7-B7tiUrB0xZkNnd2FcRzOA/viewform";
 
+            Uri uri = Uri.parse(url);
+            Intent intent = new Intent();
+            intent.setData(uri);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

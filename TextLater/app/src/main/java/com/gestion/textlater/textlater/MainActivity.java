@@ -1,6 +1,8 @@
 package com.gestion.textlater.textlater;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -10,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -76,12 +79,27 @@ public class MainActivity extends AppCompatActivity {
                                 fragmentTransaction = true;
                                 break;
                             case R.id.nav_nosotros:
-                                fragment = new HistorialFragment();
-                                fragmentTransaction = true;
+                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                                alertDialog.setTitle("Información General: ");
+                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.show();
+
                                 break;
                             case R.id.nav_sendFeedBack:
-                                fragment = new LeerMensajesFragment();
-                                fragmentTransaction = true;
+                                final String url = "https://docs.google.com/forms/d/e/1FAIpQLScmQffr9p2As0DdHIkQdEn9c7G7-B7tiUrB0xZkNnd2FcRzOA/viewform";
+
+                                Uri uri = Uri.parse(url);
+                                Intent intent = new Intent();
+                                intent.setData(uri);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                               // fragmentTransaction = true;
                                 break;
                             case R.id.nav_slideshow:
                                 Log.i("NavigationView", "Pulsada opción 2");

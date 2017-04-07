@@ -11,33 +11,72 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/destinatario_editText"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:hint="@string/destinatario"
-            android:layout_margin="8dp"/>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/Mensaje_asunto_editText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:hint="@string/Asunto"
-            android:inputType="textMultiLine"
-            android:layout_margin="8dp" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/destinatario_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:hint="@string/destinatario" />
+
+                <EditText
+                    android:id="@+id/Mensaje_asunto_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:hint="@string/Asunto"
+                    android:inputType="textMultiLine" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:id="@+id/date_viewButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:backgroundTint="#CFD8DC"
+                    android:src="@drawable/ic_date_range_black_24dp"
+                    android:tint="#448AFF" />
+
+                <ImageButton
+                    android:id="@+id/hour_viewButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="8dp"
+                    android:backgroundTint="#CFD8DC"
+                    android:src="@drawable/ic_access_time_black_24dp"
+                    android:tint="#448AFF" />
+            </LinearLayout>
+        </LinearLayout>
 
         <EditText
             android:id="@+id/Mensaje_editText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_margin="8dp"
             android:layout_weight="8"
             android:gravity="top"
             android:hint="@string/Mensaje"
-            android:inputType="textMultiLine"
-            android:layout_margin="8dp" />
-
+            android:inputType="textMultiLine" />
 
 
     </LinearLayout>

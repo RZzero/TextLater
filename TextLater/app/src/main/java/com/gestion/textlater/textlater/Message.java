@@ -14,6 +14,9 @@ public class Message {
     private String timeToSend;
     private String messageStatus;
 
+    public Message(){
+
+    }
 
     public Message(String platform, String sender, String toM, String subject, String content, String timeToSend, String messageStatus) {
         this.platform = platform;
@@ -39,7 +42,7 @@ public class Message {
     }
 
     public void setSender(String sender) {
-        sender = sender;
+        this.sender = sender;
     }
 
     public String getToM() {

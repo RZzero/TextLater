@@ -2,10 +2,12 @@ package com.gestion.textlater.textlater;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -21,6 +23,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -28,21 +32,48 @@ import com.loopj.android.http.RequestParams;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Calendar;
 
 import cz.msebera.android.httpclient.Header;
 
+import static android.R.attr.id;
 import static com.gestion.textlater.textlater.R.id.fab;
 import static com.gestion.textlater.textlater.R.string.Asunto;
 
 public class EnviarMensajeActivity extends AppCompatActivity {
-    boolean asunto = true;
+
+    boolean asunto, timeEdited, dateEdited;
+    int year_x, month_x, day_x, hour_y, min_y, sec_y;
+    static final int DIALOG_ID = 0, DIALOG_ID2 = 1;
+
     EditText mAsunto, mDestinatario, mMensaje;
     Message Mensaje;
     String mUsuario, mPlatform, mDate, id;
     ImageButton date, hour;
-    int year_x, month_x, day_x;
-    static final int DIALOG_ID = 0;
 
+    //Listeners for the Dialogs to get the input from the user
+    //Date listener
+    private DatePickerDialog.OnDateSetListener dpickerListener = new DatePickerDialog.OnDateSetListener(){
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            year_x = year;
+            month_x = month;
+            day_x = dayOfMonth;
+            giveDateFormat();
+            dateEdited = true;
+        }
+    };
+    //Time listener
+    private TimePickerDialog.OnTimeSetListener tpickerListener = new TimePickerDialog.OnTimeSetListener(){
+
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            hour_y = hourOfDay;
+            min_y = minute;
+            giveTimeFormat();
+            timeEdited = true;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +82,10 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_v);
         setSupportActionBar(toolbar);
+
+        asunto = true;
+        timeEdited = false;
+        dateEdited = false;
 
         if (getIntent() != null) {
             Intent intent = getIntent();
@@ -64,12 +99,18 @@ public class EnviarMensajeActivity extends AppCompatActivity {
             setTitle(id.toUpperCase());
         }
 
+        final Calendar cal = Calendar.getInstance();
+        year_x = cal.get(Calendar.YEAR);
+        month_x = cal.get(Calendar.MONTH);
+        day_x = cal.get(Calendar.DAY_OF_MONTH);
+        hour_y = cal.get(Calendar.HOUR_OF_DAY);
+        min_y = cal.get(Calendar.MINUTE);
+
         //Oculta el elemento de editar texto
         setAsunto();
 
         Mensaje = new Message();
         createButtons();
-
     }
 
     private void createButtons(){
@@ -87,18 +128,21 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                     Mensaje.setSubject(mAsunto.getText().toString());
                 }
 
-                //SET THE MESSAGE PROPERTIES
-                getValues();
+                if(timeEdited && dateEdited) {
+                    //SET THE MESSAGE PROPERTIES
+                    getValues();
 
-                //POST THE MESSAGE
-                MakeHttpRequest();
-                //clear();
-
+                    //POST THE MESSAGE
+                    MakeHttpRequest();
+                    //clear();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Chouse and hour and a date", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
         //DATeIMAGEBUTTON
-
         date = (ImageButton) findViewById(R.id.date_viewButton);
 
         date.setOnClickListener(new View.OnClickListener() {
@@ -108,10 +152,15 @@ public class EnviarMensajeActivity extends AppCompatActivity {
             }
         });
 
-
         //HOUrIMAGEBUTTON
-
         hour = (ImageButton) findViewById(R.id.hour_viewButton);
+
+        hour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog(DIALOG_ID2);
+            }
+        });
 
 
     }
@@ -120,24 +169,20 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
     }
 
+    private void giveTimeFormat(){
+
+    }
 
     @Override
     protected Dialog onCreateDialog(int id){
         if(id == DIALOG_ID){
             return new DatePickerDialog(this, dpickerListener, year_x, month_x, day_x);
         }
+        else if(id == DIALOG_ID2){
+            return new TimePickerDialog(this, tpickerListener, hour_y, min_y, true);
+        }
         return null;
     }
-
-    private DatePickerDialog.OnDateSetListener dpickerListener = new DatePickerDialog.OnDateSetListener(){
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            year_x = year;
-            month_x = month;
-            day_x = dayOfMonth;
-            giveDateFormat();
-        }
-    };
 
     private void clear(){
         mAsunto.setText("");

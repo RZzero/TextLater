@@ -88,9 +88,6 @@ public class ModificarActivity extends AppCompatActivity {
         mMensaje.setText(Mensaje.getContent());
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_v);
-        setSupportActionBar(toolbar);
-
         asunto = true;
         timeEdited = false;
         dateEdited = false;
@@ -114,13 +111,9 @@ public class ModificarActivity extends AppCompatActivity {
         min_y = cal.get(Calendar.MINUTE);
 
         //Oculta el elemento de editar texto
-        //setAsunto();
-
-        Mensaje = new Message();
-        //createButtons();
+        createButtons();
 
     }
-
 
     private void createButtons() {
         //FLOATINGBUTTON
@@ -197,7 +190,6 @@ public class ModificarActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private void giveDateFormat() {
@@ -210,7 +202,6 @@ public class ModificarActivity extends AppCompatActivity {
         hours = hour_y + ":";
         hours += min_y + "";
     }
-
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == DIALOG_ID) {
@@ -228,12 +219,7 @@ public class ModificarActivity extends AppCompatActivity {
 
     }
 
-    private void setAsunto() {
-        EditText Asunto = (EditText) findViewById(R.id.Mensaje_asunto_editText);
-        if (!asunto) {
-            Asunto.setVisibility(View.GONE);
-        }
-    }
+
 
     private void MakeHttpRequest() {
 
@@ -253,10 +239,11 @@ public class ModificarActivity extends AppCompatActivity {
         params.put("content", Mensaje.getContent().toString());
         params.put("timeToSend", Mensaje.getTimeToSend().toString());
         params.put("messageStatus", Mensaje.getMessageStatus().toString());
+        params.put("idMessage", Mensaje.getIdMessage().toString());
 
 
         AsyncHttpClient client = new AsyncHttpClient();
-        client.post("http://52.36.200.87:80/api/v1/message/", params, new AsyncHttpResponseHandler() {
+        client.post("http://52.36.200.87:80/api/v1/message/modifymessage/", params, new AsyncHttpResponseHandler() {
 
             @Override
             public void onStart() {
@@ -284,28 +271,21 @@ public class ModificarActivity extends AppCompatActivity {
 
     private void getValues() {
         mDestinatario = (EditText) findViewById(R.id.destinatario_editText);
-
+        Mensaje.setToM(mDestinatario.getText().toString());
 
         mMensaje = (EditText) findViewById(R.id.Mensaje_editText);
-
+        Mensaje.setContent(mMensaje.getText().toString());
 
         mUsuario = "the.robert.007@gmail.com";
         Mensaje.setSender(mUsuario);
 
-//        mDate = datePI + hours;
-//        Mensaje.setTimeToSend(mDate);
+        mDate = datePI + hours;
+        Mensaje.setTimeToSend(mDate);
 
         //TODO: NO SE QUE PONER
         Mensaje.setMessageStatus("NS");
-        //Mensaje.setPlatform(mPlatform);
+        Mensaje.setPlatform(mPlatform);
     }
-
-    @Override
-    public void finish() {
-        super.finish();
-    }
-
-
 
 
 }

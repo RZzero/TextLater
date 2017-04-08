@@ -45,7 +45,7 @@ public class HistorialFragment extends Fragment {
 
     View view;
     private String TEXTLATER_REQUEST_MESSAGES_URL =
-            "http://52.36.200.87/api/v1/message/mymessages?sender=rafaelsuazoh@gmail.com";
+            "http://52.36.200.87/api/v1/message/mymessages?sender=the.robert.007@gmail.com";
 
     public HistorialFragment() {
         // Required empty public constructor

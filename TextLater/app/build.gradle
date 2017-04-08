@@ -21,21 +21,23 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+
+    compile 'com.google.android.gms:play-services-auth:10.2.1'
+    compile 'pub.devrel:easypermissions:0.2.1'
+    compile('com.google.api-client:google-api-client-android:1.22.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    compile('com.google.apis:google-api-services-gmail:v1-rev63-1.22.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+
     compile files('android-async-http-1.4.9.jar')
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.0'
     compile 'com.android.support:support-v4:25.3.0'
-    compile 'com.google.android.gms:play-services-auth:9.8.0'
     compile 'com.github.clans:fab:1.6.4'
     compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'org.jsoup:jsoup:1.10.2'
-    testCompile 'junit:junit:4.12'
 }
-
-
-apply plugin: 'com.google.gms.google-services'

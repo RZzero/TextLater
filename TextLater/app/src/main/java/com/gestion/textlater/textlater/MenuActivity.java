@@ -85,6 +85,8 @@ public class MenuActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_configuracion) {
+            Intent i = new Intent(MenuActivity.this, PrincipalActivity.class);
+            this.startActivity(i);
 
         } else if (id == R.id.nav_nosotros) {
 

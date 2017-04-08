@@ -258,6 +258,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                 // called when response HTTP status is "200 OK"
+                finish();
                 Log.d("holiboli:", headers.toString());
                 Log.e("GOLA:", response.toString());
             }
@@ -313,9 +314,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
 
-        if (id == R.id.action_settings_2) {
-            return true;
-        } else if (id == R.id.action_settings_cerrar_envioMensaje) {
+        if (id == R.id.action_settings_cerrar_envioMensaje) {
             finish();
         }
 

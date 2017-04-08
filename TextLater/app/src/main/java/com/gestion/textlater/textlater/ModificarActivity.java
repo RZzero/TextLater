@@ -255,6 +255,7 @@ public class ModificarActivity extends AppCompatActivity {
                 // called when response HTTP status is "200 OK"
                 Log.d("holiboli:", headers.toString());
                 Log.e("GOLA:", response.toString());
+                finish();
             }
 
             @Override

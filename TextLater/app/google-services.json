@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "143803695497",
+    "project_id": "firebase-textlater"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143803695497:android:e4ad385a9ed68154",
+        "android_client_info": {
+          "package_name": "com.gestion.textlater.textlater"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143803695497-nhmbbmatch2lq62u375614eg9sc6dj9u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.gestion.textlater.textlater",
+            "certificate_hash": "399d1b5ddae69140034d5891c1767448c8212205"
+          }
+        },
+        {
+          "client_id": "143803695497-gj9lmkk23sv6bbh0phah7n1nkc5ie5sr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAK49gVwVF_fPOo_cPvAUAM577O0ZjtbmQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

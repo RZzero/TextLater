@@ -1,6 +1,8 @@
 package com.gestion.textlater.textlater;
 
 
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,8 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -26,6 +30,9 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -45,12 +52,7 @@ public class HistorialFragment extends Fragment {
 
     private void updateUi(Message message) {
 
-        TextView titleTextView = (TextView) view.findViewById(R.id.subject_TextView);
-        titleTextView.setText(message.getSubject());
 
-        // Display the earthquake date in the UI
-        TextView dateTextView = (TextView) view.findViewById(R.id.some_text_TextView);
-        dateTextView.setText(message.getContent());
 
 
     }
@@ -88,7 +90,6 @@ public class HistorialFragment extends Fragment {
                 return;
             }
 
-           updateUi(message);
         }
 
         /**
@@ -216,11 +217,41 @@ public class HistorialFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        view = inflater.inflate(R.layout.item_historial, container, false);
+        view = inflater.inflate(R.layout.list, container, false);
         mensajes = new ArrayList<>();
         TextLaterAsyncTask task = new TextLaterAsyncTask();
         task.execute();
 
+        try {
+            task.get(2000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
+
+        MensajeAdapter adapter = new MensajeAdapter(getActivity(), mensajes);
+        ListView  listView = (ListView) view.findViewById(R.id.list);
+
+        listView.setAdapter(adapter);
+
+        //Listener for catching the touch when the user wants to here the pronunciation of the word.
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long arg3) {
+                /*
+                another way to do it.
+                Word value = (Word) adapter.getItemAtPosition(position);
+                */
+                Message value = mensajes.get(position);
+
+
+
+            }
+        });
         return view;
     }
 

@@ -15,6 +15,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import static android.R.attr.value;
+
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -83,7 +85,8 @@ public class MenuActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_configuracion) {
-            // Handle the camera action
+            Intent intent = new Intent(getApplicationContext(), PrincipalActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_nosotros) {
 
         } else if (id == R.id.nav_slideshow) {

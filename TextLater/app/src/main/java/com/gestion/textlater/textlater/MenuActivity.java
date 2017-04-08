@@ -85,11 +85,8 @@ public class MenuActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_configuracion) {
-            Intent intent = new Intent(getApplicationContext(), PrincipalActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.nav_nosotros) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_nosotros) {
 
         } else if (id == R.id.nav_sendFeedBack) {
             final String url = "https://docs.google.com/forms/d/e/1FAIpQLScmQffr9p2As0DdHIkQdEn9c7G7-B7tiUrB0xZkNnd2FcRzOA/viewform";

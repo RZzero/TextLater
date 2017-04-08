@@ -101,9 +101,6 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                                // fragmentTransaction = true;
                                 break;
-                            case R.id.nav_slideshow:
-                                Log.i("NavigationView", "Pulsada opción 2");
-                                break;
                         }
 
                         if (fragmentTransaction) {

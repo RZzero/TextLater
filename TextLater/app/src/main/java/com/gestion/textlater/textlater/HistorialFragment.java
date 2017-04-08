@@ -258,6 +258,9 @@ public class HistorialFragment extends Fragment {
                     myIntent.putExtra("content", value.getContent());
                     myIntent.putExtra("timeToSend", value.getTimeToSend());
                     myIntent.putExtra("ToM", value.getToM());
+                    myIntent.putExtra("id", "gmail");
+
+
                     startActivity(myIntent);
 
                 }

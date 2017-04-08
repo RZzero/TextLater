@@ -1,6 +1,7 @@
 package com.gestion.textlater.textlater;
 
 
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
@@ -247,7 +248,19 @@ public class HistorialFragment extends Fragment {
                 Word value = (Word) adapter.getItemAtPosition(position);
                 */
                 Message value = mensajes.get(position);
+                if(value.getMessageStatus().equals("NS")){
+                    Intent myIntent = new Intent(getActivity(), ModificarActivity.class);
+                    myIntent.putExtra("idMessage", value.getIdMessage());
+                    myIntent.putExtra("platform", value.getPlatform());
+                    myIntent.putExtra("sender", value.getSender());
+                    myIntent.putExtra("messageStatus", value.getMessageStatus());
+                    myIntent.putExtra("subject", value.getSubject());
+                    myIntent.putExtra("content", value.getContent());
+                    myIntent.putExtra("timeToSend", value.getTimeToSend());
+                    myIntent.putExtra("ToM", value.getToM());
+                    startActivity(myIntent);
 
+                }
 
 
             }

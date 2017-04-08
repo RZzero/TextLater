@@ -1,11 +1,13 @@
 package com.gestion.textlater.textlater;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 
 import static android.R.id.list;
 import static android.R.id.message;
+import static android.view.ViewGroup.FOCUS_BLOCK_DESCENDANTS;
 
 /**
  * Created by bluedeep on 08/04/17.
@@ -40,6 +43,11 @@ public class MensajeAdapter extends ArrayAdapter<Message> {
         // Display the earthquake date in the UI
         TextView dateTextView = (TextView) listItemView.findViewById(R.id.some_text_TextView);
         dateTextView.setText(message.getContent());
+
+        if(message.getMessageStatus().equals("NS")){
+            listItemView.setBackgroundColor(Color.argb(100,217, 252, 219));
+        }
+
         return listItemView;
     }
 }

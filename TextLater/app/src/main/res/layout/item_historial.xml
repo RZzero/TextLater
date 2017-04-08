@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:descendantFocusability="blocksDescendants"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="10"
+            android:descendantFocusability="blocksDescendants"
             android:orientation="vertical">
 
             <!-- TODO: Update blank fragment layout -->
@@ -19,19 +23,21 @@
             <TextView
                 android:id="@+id/subject_TextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:maxLines="1"
+                android:layout_height="28dp"
+                android:layout_margin="4dp"
+                android:descendantFocusability="blocksDescendants"
                 android:maxLength="30"
+                android:maxLines="1"
                 android:text="@string/hello_blank_fragment" />
 
             <TextView
                 android:id="@+id/some_text_TextView"
                 android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_margin="8dp"
-                android:maxLines="1"
+                android:layout_height="30dp"
+                android:layout_margin="0dp"
+                android:descendantFocusability="blocksDescendants"
                 android:maxLength="30"
+                android:maxLines="1"
                 android:text="@string/hello_blank_fragment" />
 
 
@@ -42,6 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4.57"
+            android:descendantFocusability="blocksDescendants"
             android:text="G" />
 
     </LinearLayout>

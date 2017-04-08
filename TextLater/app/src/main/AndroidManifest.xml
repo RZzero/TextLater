@@ -31,7 +31,8 @@
             android:label="@string/title_activity_menu"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".PrincipalActivity" />
-        <activity android:name=".ModificarActivity"></activity>
+        <activity android:name=".ModificarActivity" />
+        <activity android:name=".Nombre"></activity>
     </application>
 
 </manifest>

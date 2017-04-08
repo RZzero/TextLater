@@ -147,7 +147,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                                 if (hour_y < cal.get(Calendar.getInstance().HOUR_OF_DAY)) {
                                     Toast.makeText(getApplicationContext(), "Hora invalida.", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    if (min_y < cal.get(Calendar.getInstance().MINUTE)) {
+                                    if ( hour_y == cal.get(Calendar.getInstance().HOUR_OF_DAY) && min_y < cal.get(Calendar.getInstance().MINUTE)) {
                                         Toast.makeText(getApplicationContext(), "Minuto invalido.", Toast.LENGTH_SHORT).show();
                                     } else {
                                         //POST THE MESSAGE

@@ -38,6 +38,7 @@ import cz.msebera.android.httpclient.Header;
 
 import static android.R.attr.id;
 import static com.gestion.textlater.textlater.R.id.fab;
+import static com.gestion.textlater.textlater.R.id.subject_TextView;
 import static com.gestion.textlater.textlater.R.string.Asunto;
 
 public class EnviarMensajeActivity extends AppCompatActivity {
@@ -48,12 +49,12 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
     EditText mAsunto, mDestinatario, mMensaje;
     Message Mensaje;
-    String mUsuario, mPlatform, mDate, id;
+    String mUsuario, mPlatform, mDate, id, datePI, hours;
     ImageButton date, hour;
 
     //Listeners for the Dialogs to get the input from the user
     //Date listener
-    private DatePickerDialog.OnDateSetListener dpickerListener = new DatePickerDialog.OnDateSetListener(){
+    private DatePickerDialog.OnDateSetListener dpickerListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
             year_x = year;
@@ -64,7 +65,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         }
     };
     //Time listener
-    private TimePickerDialog.OnTimeSetListener tpickerListener = new TimePickerDialog.OnTimeSetListener(){
+    private TimePickerDialog.OnTimeSetListener tpickerListener = new TimePickerDialog.OnTimeSetListener() {
 
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -113,7 +114,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         createButtons();
     }
 
-    private void createButtons(){
+    private void createButtons() {
         //FLOATINGBUTTON
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_send);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -128,15 +129,41 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                     Mensaje.setSubject(mAsunto.getText().toString());
                 }
 
-                if(timeEdited && dateEdited) {
+                if (timeEdited && dateEdited) {
                     //SET THE MESSAGE PROPERTIES
                     getValues();
 
-                    //POST THE MESSAGE
-                    MakeHttpRequest();
-                    //clear();
-                }
-                else {
+                    final Calendar cal = Calendar.getInstance();
+
+                    if (year_x < cal.get(Calendar.getInstance().YEAR)) {
+                        Toast.makeText(getApplicationContext(), "Año invalido.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (month_x < cal.get(Calendar.getInstance().MONTH)) {
+                            Toast.makeText(getApplicationContext(), "Mes invalido.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (day_x < cal.get(Calendar.getInstance().DAY_OF_MONTH)) {
+                                Toast.makeText(getApplicationContext(), "Dia invalido.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                if (hour_y < cal.get(Calendar.getInstance().HOUR_OF_DAY)) {
+                                    Toast.makeText(getApplicationContext(), "Hora invalida.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    if (min_y < cal.get(Calendar.getInstance().MINUTE)) {
+                                        Toast.makeText(getApplicationContext(), "Minuto invalido.", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        //POST THE MESSAGE
+                                        if (!mAsunto.getText().equals("") && !mDestinatario.getText().equals("") && !mMensaje.getText().equals("")) {
+                                            MakeHttpRequest();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "Rellene los campos.", Toast.LENGTH_SHORT).show();
+                                        }
+                                        //clear();
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                } else {
                     Toast.makeText(getApplicationContext(), "Chouse and hour and a date", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -165,31 +192,34 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
     }
 
-    private void giveDateFormat(){
-
+    private void giveDateFormat() {
+        datePI = year_x + "-";
+        datePI += month_x + "-";
+        datePI += day_x + " ";
     }
 
-    private void giveTimeFormat(){
-
+    private void giveTimeFormat() {
+        hours = hour_y + ":";
+        hours += min_y + "";
     }
 
     @Override
-    protected Dialog onCreateDialog(int id){
-        if(id == DIALOG_ID){
+    protected Dialog onCreateDialog(int id) {
+        if (id == DIALOG_ID) {
             return new DatePickerDialog(this, dpickerListener, year_x, month_x, day_x);
-        }
-        else if(id == DIALOG_ID2){
+        } else if (id == DIALOG_ID2) {
             return new TimePickerDialog(this, tpickerListener, hour_y, min_y, true);
         }
         return null;
     }
 
-    private void clear(){
+    private void clear() {
         mAsunto.setText("");
         mDestinatario.setText("");
         mMensaje.setText("");
 
     }
+
     private void setAsunto() {
         EditText Asunto = (EditText) findViewById(R.id.Mensaje_asunto_editText);
         if (!asunto) {
@@ -208,13 +238,13 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         * @messageStatus
         * */
         RequestParams params = new RequestParams();
-        params.put("platform", URLEncoder.encode(Mensaje.getPlatform()).toString());
-        params.put("sender", URLEncoder.encode(Mensaje.getSender()).toString());
-        params.put("ToM", URLEncoder.encode(Mensaje.getToM()).toString());
-        params.put("subject", URLEncoder.encode(Mensaje.getSubject()).toString());
-        params.put("content", URLEncoder.encode(Mensaje.getContent()).toString());
-        params.put("timeToSend", URLEncoder.encode(Mensaje.getTimeToSend()).toString());
-        params.put("messageStatus", URLEncoder.encode(Mensaje.getMessageStatus()).toString());
+        params.put("platform", Mensaje.getPlatform().toString());
+        params.put("sender", Mensaje.getSender().toString());
+        params.put("ToM", Mensaje.getToM().toString());
+        params.put("subject", Mensaje.getSubject().toString());
+        params.put("content", Mensaje.getContent().toString());
+        params.put("timeToSend", Mensaje.getTimeToSend().toString());
+        params.put("messageStatus", Mensaje.getMessageStatus().toString());
 
 
         AsyncHttpClient client = new AsyncHttpClient();
@@ -244,7 +274,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         });
     }
 
-    private void getValues(){
+    private void getValues() {
         mDestinatario = (EditText) findViewById(R.id.destinatario_editText);
         Mensaje.setToM(mDestinatario.getText().toString());
 
@@ -254,12 +284,11 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         mUsuario = "the.robert.007@gmail.com";
         Mensaje.setSender(mUsuario);
 
-        mDate = "06-04-17 8:00";
+        mDate = datePI + hours;
         Mensaje.setTimeToSend(mDate);
 
         //TODO: NO SE QUE PONER
         Mensaje.setMessageStatus("NS");
-        Mensaje.setSender("the.robert.007@gmail.com");
         Mensaje.setPlatform(mPlatform);
     }
 

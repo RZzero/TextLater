@@ -6,6 +6,7 @@ package com.gestion.textlater.textlater;
 
 public class Message {
 
+    private String idMessage;
     private String platform;
     private String sender;
     private String ToM;
@@ -14,20 +15,30 @@ public class Message {
     private String timeToSend;
     private String messageStatus;
 
+
+
     public Message(){
 
     }
 
-    public Message(String platform, String sender, String toM, String subject, String content, String timeToSend, String messageStatus) {
+    public Message(String idMessage,String platform, String sender, String ToM, String subject, String content, String timeToSend, String messageStatus) {
+        this.idMessage = idMessage;
         this.platform = platform;
         this.sender = sender;
-        ToM = toM;
+        this.ToM = ToM;
         this.subject = subject;
         this.content = content;
         this.timeToSend = timeToSend;
         this.messageStatus = messageStatus;
     }
 
+    public String getIdMessage() {
+        return idMessage;
+    }
+
+    public void setIdMessage(String idMessage) {
+        this.idMessage = idMessage;
+    }
 
     public String getPlatform() {
         return platform;
@@ -85,4 +96,17 @@ public class Message {
         this.messageStatus = messageStatus;
     }
 
+    @Override
+    public String toString() {
+        return "Message{" +
+                "idMessage='" + idMessage + '\'' +
+                ", platform='" + platform + '\'' +
+                ", sender='" + sender + '\'' +
+                ", ToM='" + ToM + '\'' +
+                ", subject='" + subject + '\'' +
+                ", content='" + content + '\'' +
+                ", timeToSend='" + timeToSend + '\'' +
+                ", messageStatus='" + messageStatus + '\'' +
+                '}';
+    }
 }

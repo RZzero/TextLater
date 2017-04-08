@@ -5,10 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-/**
- * Created by kyonru on 26/03/17.
- */
-
 public class MenuFragmentAdapter extends FragmentPagerAdapter {
     Context mContext;
     public MenuFragmentAdapter(FragmentManager fm, Context context) {
@@ -18,7 +14,7 @@ public class MenuFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        if(position == 0){
+        if(position == 1){
             return new HistorialFragment();
         }else{
             return new LeerMensajesFragment();

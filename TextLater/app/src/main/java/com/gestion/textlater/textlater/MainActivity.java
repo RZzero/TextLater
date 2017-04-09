@@ -2,8 +2,10 @@ package com.gestion.textlater.textlater;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -21,6 +23,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
+
+import com.github.angads25.filepicker.controller.DialogSelectionListener;
+import com.github.angads25.filepicker.model.DialogConfigs;
+import com.github.angads25.filepicker.model.DialogProperties;
+import com.github.angads25.filepicker.view.FilePickerDialog;
+
+import java.io.File;
+
+import static android.R.attr.value;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar appbar;
     private DrawerLayout drawerLayout;
     private NavigationView navView;
+    private FilePickerDialog dialog;
+
 
     FloatingActionButton fabEnviar, fabGmail, fabTelegram;
     Animation FabOpen, FabClose, FabRClockwise, FabRantiClockwise;
@@ -75,8 +89,9 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (menuItem.getItemId()) {
                             case R.id.nav_configuracion:
-                                fragment = new LeerMensajesFragment();
-                                fragmentTransaction = true;
+                                Intent myIntent = new Intent(MainActivity.this, PrincipalActivity.class);
+                               //g myIntent.putExtra("key", value); //Optional parameters
+                                MainActivity.this.startActivity(myIntent);
                                 break;
                             case R.id.nav_nosotros:
                                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -99,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent.setData(uri);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
-                               // fragmentTransaction = true;
+                                // fragmentTransaction = true;
                                 break;
                         }
 
@@ -157,13 +172,39 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void telegramEnviar (View view) {
-        Intent i = new Intent(MainActivity.this, EnviarMensajeActivity.class);
+    public void telegramEnviar(View view) {
+       /* Intent i = new Intent(MainActivity.this, EnviarMensajeActivity.class);
         i.putExtra("id", "telegram");
-        startActivity(i);
+        startActivity(i);*/
+
+        //This is going to be the method to be includedd when telegram app needs to be oppened, the message can be send throught every platfrom in the phone.
+        //Take this as a second action.
+        //anyway, we need to do it for telegram
+        /*Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "This is my text to send.");
+        sendIntent.setType("text/plain");
+        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+        */
+        DialogProperties properties = new DialogProperties();
+        properties.selection_mode = DialogConfigs.SINGLE_MODE;
+        properties.selection_type = DialogConfigs.FILE_SELECT;
+        properties.root = new File(DialogConfigs.DEFAULT_DIR);
+        properties.error_dir = new File(DialogConfigs.DEFAULT_DIR);
+        properties.offset = new File(DialogConfigs.DEFAULT_DIR);
+        properties.extensions = null;
+        dialog = new FilePickerDialog(MainActivity.this,properties);
+        dialog.setTitle("Select a File");
+        dialog.setDialogSelectionListener(new DialogSelectionListener() {
+            @Override
+            public void onSelectedFilePaths(String[] files) {
+                //files is the array of the paths of files selected by the Application User.
+            }
+        });
+        dialog.show();
     }
 
-    public void gmailEnviar(View view){
+    public void gmailEnviar(View view) {
         Intent i = new Intent(MainActivity.this, EnviarMensajeActivity.class);
         i.putExtra("id", "gmail");
         startActivity(i);
@@ -195,4 +236,24 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    //Add this method to show Dialog when the required permission has been granted to the app.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case FilePickerDialog.EXTERNAL_READ_PERMISSION_GRANT: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if(dialog!=null)
+                    {   //Show dialog if the read permission has been granted.
+                        dialog.show();
+                    }
+                }
+                else {
+                    //Permission has not been granted. Notify the user.
+                    Toast.makeText(MainActivity.this,"Permission is Required for getting list of files",Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+
 }

@@ -4,10 +4,12 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -26,17 +28,24 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.github.angads25.filepicker.controller.DialogSelectionListener;
+import com.github.angads25.filepicker.model.DialogConfigs;
+import com.github.angads25.filepicker.model.DialogProperties;
+import com.github.angads25.filepicker.view.FilePickerDialog;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import cz.msebera.android.httpclient.Header;
 
 import static android.R.attr.id;
+import static android.R.attr.theme;
 import static com.gestion.textlater.textlater.R.id.fab;
 import static com.gestion.textlater.textlater.R.id.subject_TextView;
 import static com.gestion.textlater.textlater.R.string.Asunto;
@@ -46,11 +55,15 @@ public class EnviarMensajeActivity extends AppCompatActivity {
     boolean asunto, timeEdited, dateEdited;
     int year_x, month_x, day_x, hour_y, min_y, sec_y;
     static final int DIALOG_ID = 0, DIALOG_ID2 = 1;
+    private String[] filesPath;
 
     EditText mAsunto, mDestinatario, mMensaje;
     Message Mensaje;
     String mUsuario, mPlatform, mDate, id, datePI, hours;
     ImageButton date, hour;
+
+    //Fileviewdialog
+    private FilePickerDialog dialog;
 
     //Listeners for the Dialogs to get the input from the user
     //Date listener
@@ -83,6 +96,8 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_v);
         setSupportActionBar(toolbar);
+
+        filesPath = new String[]{"empty"};
 
         asunto = true;
         timeEdited = false;
@@ -147,7 +162,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                                 if (hour_y < cal.get(Calendar.getInstance().HOUR_OF_DAY)) {
                                     Toast.makeText(getApplicationContext(), "Hora invalida.", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    if ( hour_y == cal.get(Calendar.getInstance().HOUR_OF_DAY) && min_y < cal.get(Calendar.getInstance().MINUTE)) {
+                                    if (hour_y == cal.get(Calendar.getInstance().HOUR_OF_DAY) && min_y < cal.get(Calendar.getInstance().MINUTE)) {
                                         Toast.makeText(getApplicationContext(), "Minuto invalido.", Toast.LENGTH_SHORT).show();
                                     } else {
                                         //POST THE MESSAGE
@@ -316,10 +331,45 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
         if (id == R.id.action_settings_cerrar_envioMensaje) {
             finish();
+        } else {
+            DialogProperties properties = new DialogProperties();
+            //MULTIPLE SELECTION
+            properties.selection_mode = DialogConfigs.MULTI_MODE;
+            properties.selection_type = DialogConfigs.FILE_SELECT;
+            properties.root = new File(DialogConfigs.DEFAULT_DIR);
+            properties.error_dir = new File(DialogConfigs.DEFAULT_DIR);
+            properties.offset = new File(DialogConfigs.DEFAULT_DIR);
+            properties.extensions = null;
+            dialog = new FilePickerDialog(this, properties);
+            dialog.setTitle("Select a File");
+            dialog.setDialogSelectionListener(new DialogSelectionListener() {
+                @Override
+                public void onSelectedFilePaths(String[] files) {
+                    //files is the array of the paths of files selected by the Application User.
+                    Toast.makeText(EnviarMensajeActivity.this, files[0], Toast.LENGTH_SHORT).show();
+                    filesPath = files;
+                }
+            });
+            dialog.show();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
+    //Add this method to show Dialog when the required permission has been granted to the app.
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case FilePickerDialog.EXTERNAL_READ_PERMISSION_GRANT: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (dialog != null) {   //Show dialog if the read permission has been granted.
+                        dialog.show();
+                    }
+                } else {
+                    //Permission has not been granted. Notify the user.
+                    Toast.makeText(EnviarMensajeActivity.this, "Permission is Required for getting list of files", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
 }

@@ -16,6 +16,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -46,6 +48,7 @@ import cz.msebera.android.httpclient.Header;
 
 import static android.R.attr.id;
 import static android.R.attr.theme;
+import static android.R.id.message;
 import static com.gestion.textlater.textlater.R.id.fab;
 import static com.gestion.textlater.textlater.R.id.subject_TextView;
 import static com.gestion.textlater.textlater.R.string.Asunto;
@@ -64,6 +67,12 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
     //Fileviewdialog
     private FilePickerDialog dialog;
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
+    String[][] myDataset = null;
 
     //Listeners for the Dialogs to get the input from the user
     //Date listener
@@ -89,6 +98,9 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         }
     };
 
+    public EnviarMensajeActivity() {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +110,29 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         filesPath = new String[]{"empty"};
+
+        //FILE
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        myDataset = new String[][]{{}};
+
+        myDataset[0] = new String[]{};
+
+        mAdapter = new FileAdapter(myDataset[0]);
+        mRecyclerView.setAdapter(mAdapter);
+
 
         asunto = true;
         timeEdited = false;
@@ -346,8 +381,23 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                 @Override
                 public void onSelectedFilePaths(String[] files) {
                     //files is the array of the paths of files selected by the Application User.
-                    Toast.makeText(EnviarMensajeActivity.this, files[0], Toast.LENGTH_SHORT).show();
                     filesPath = files;
+                    String toastMessage = filesPath.length + " archivos seleccionados";
+
+                    //HOLA FILES
+                    String[] tempFiles = new String[filesPath.length];
+                    for(int i = 0; i < tempFiles.length; i++){
+                        String[] namePath = filesPath[i].split("/");
+                        tempFiles[i] = namePath[namePath.length-1];
+                    }
+
+                    myDataset[0] = tempFiles;
+
+
+                    mAdapter = new FileAdapter(myDataset[0]);
+                    mRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                    Toast.makeText(EnviarMensajeActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
                 }
             });
             dialog.show();

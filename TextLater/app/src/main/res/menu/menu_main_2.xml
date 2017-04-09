@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_settings_agregarArchivo"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/uplaoaddFile"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_settings_cerrar_envioMensaje"

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ListView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/list"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:drawSelectorOnTop="true"/>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/file_name_textView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Hello World!"
+    android:textColor="#FFFFFF"
+    android:background="@drawable/rounded_corner"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
+    android:textSize="12dp"
+    />

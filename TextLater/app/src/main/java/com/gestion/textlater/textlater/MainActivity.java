@@ -88,9 +88,10 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (menuItem.getItemId()) {
                             case R.id.nav_configuracion:
-                                Intent myIntent = new Intent(MainActivity.this, PrincipalActivity.class);
+                                //Intent myIntent = new Intent(MainActivity.this, PrincipalActivity.class);
                                //g myIntent.putExtra("key", value); //Optional parameters
-                                MainActivity.this.startActivity(myIntent);
+                                //MainActivity.this.startActivity(myIntent);
+                                Auth.tryAuth(MainActivity.this);
                                 break;
                             case R.id.nav_nosotros:
                                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();

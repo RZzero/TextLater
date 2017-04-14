@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -62,6 +63,12 @@ import cz.msebera.android.httpclient.client.HttpClient;
 import cz.msebera.android.httpclient.client.methods.HttpPost;
 import cz.msebera.android.httpclient.entity.InputStreamEntity;
 import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import static android.R.attr.id;
 import static android.R.attr.theme;
@@ -308,25 +315,41 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         }
     }
 
-
+    public static String getMimeType(String url) {
+        String type = null;
+        String extension = MimeTypeMap.getFileExtensionFromUrl(url);
+        if (extension != null) {
+            type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        }
+        return type;
+    }
     class RetrieveFeedTask extends AsyncTask<File, Void, Void> {
 
         private Exception exception;
-        String url = "http://httpbin.org/post"; //"http://posttestserver.com/post.php?dir=holiboli";
-
+        String url = "http://52.36.200.87:80/api/v1/upload/"; //"http://posttestserver.com/post.php?dir=holiboli";
+        private final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+        private final MediaType MEDIA_TYPE_SOMETHING = MediaType.parse("");
+        private final OkHttpClient client = new OkHttpClient();
         protected Void doInBackground(File... file) {
             try {
-                HttpClient httpclient = new DefaultHttpClient();
 
-                HttpPost httppost = new HttpPost(url);
+                MediaType MEDIA_TYPE_SOMETHING = MediaType.parse(getMimeType(file[0].getPath()));
+                // Use the imgur image upload API as documented at https://api.imgur.com/endpoints/image
+                RequestBody requestBody = new MultipartBody.Builder()
+                        .setType(MultipartBody.FORM)
+                        .addFormDataPart("image", file[0].getName(),
+                                RequestBody.create(MEDIA_TYPE_SOMETHING,file[0]))
+                        .build();
 
-                InputStreamEntity reqEntity = new InputStreamEntity(new FileInputStream(file[0]), -1);
-                reqEntity.setContentType("binary/octet-stream");
-                reqEntity.setChunked(true); // Send in multiple parts if needed
-                httppost.setEntity(reqEntity);
-                HttpResponse response = httpclient.execute(httppost);
-                //Do something with response...
-                Log.d("response:", response.toString());
+                Request request = new Request.Builder()
+                        .url("http://52.36.200.87:80/api/v1/upload/")
+                        .post(requestBody)
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                System.out.println(response.body().string());
             } catch (Exception e) {
                 e.printStackTrace();
             }

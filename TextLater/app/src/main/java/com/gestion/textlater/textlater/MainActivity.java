@@ -214,8 +214,7 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 drawerLayout.openDrawer(GravityCompat.START);
                 return true;
-            case R.id.action_settings:
-                return true;
+
         }
 
         return super.onOptionsItemSelected(item);

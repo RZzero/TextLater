@@ -315,7 +315,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
         for (int i = 0; i < filesStream.length; i++) {
             File file = new File(filesPath[i]);
-            nameID = id + " -- "+ file.getName();
+            nameID = id;
             Log.e("id:", nameID);
             Log.e("NAME FILE:", file.getName());
             new RetrieveFeedTask().execute(file);
@@ -343,11 +343,14 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         protected Void doInBackground(File... file) {
             try {
                 Log.e("name did change?:", nameID);
+                String nameFile = nameID +"--"+file[0].getName();
+                Log.e("name did change?:", nameFile);
+
                 MediaType MEDIA_TYPE_SOMETHING = MediaType.parse(getMimeType(file[0].getPath()));
                 // Use the imgur image upload API as documented at https://api.imgur.com/endpoints/image
                 RequestBody requestBody = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
-                        .addFormDataPart("image", nameID,
+                        .addFormDataPart("image", nameFile,
                                 RequestBody.create(MEDIA_TYPE_SOMETHING, file[0]))
                         .build();
 
@@ -407,21 +410,21 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                 finish();
                 Log.d("holiboli:", headers.toString());
                 String str = "";
-                String id = "NONNULL";
+                String idname = "NONNULL";
                 try {
                     str = new String(response, "UTF-8");
-                    /*JSONArray idArray = new JSONArray(str);
+                    JSONArray idArray = new JSONArray(str);
                     if (idArray.length() > 0) {
                         JSONObject idObject = (JSONObject) idArray.get(0);
-                        id = idObject.getString("id");
-                    }*/
+                        idname = idObject.getString("idMessage");
+                    }
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
-                } /*catch (JSONException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
-                }*/
+                }
                 Log.e("GOLA:", str);
-                MakeSecondHttpRequest(id);
+                MakeSecondHttpRequest(idname);
             }
 
             @Override

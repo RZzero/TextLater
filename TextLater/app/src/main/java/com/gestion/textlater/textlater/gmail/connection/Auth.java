@@ -1,5 +1,6 @@
 package com.gestion.textlater.textlater.gmail.connection;
 
+import com.gestion.textlater.textlater.MainActivity;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 import com.google.api.client.util.ExponentialBackOff;
@@ -7,8 +8,11 @@ import com.google.api.services.gmail.GmailScopes;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.Arrays;
@@ -27,11 +31,14 @@ public class Auth {
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
 
-    private static final String[] SCOPES = {GmailScopes.GMAIL_LABELS};
+    private static final String[] SCOPES = {GmailScopes.MAIL_GOOGLE_COM};
 
+    private Handler handler;
 
-    Auth(AppCompatActivity app){
+    Auth(AppCompatActivity app, Handler handler){
         this.app = app;
+        this.handler = handler;
+
         mCredential = GoogleAccountCredential.usingOAuth2(
                 app.getApplicationContext(), Arrays.asList(SCOPES))
                 .setBackOff(new ExponentialBackOff());
@@ -41,11 +48,15 @@ public class Auth {
         if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         }
-        //new MakeRequest(mCredential).execute();
+        new Request(mCredential,app,handler).execute();
     }
 
     String getPrefAccountName(){
         return mCredential.getSelectedAccountName();
+    }
+
+    GoogleAccountCredential getCredentials(){
+        return mCredential;
     }
 
     @AfterPermissionGranted(REQUEST_PERMISSION_GET_ACCOUNTS)
@@ -81,6 +92,12 @@ public class Auth {
             editor.apply();
             mCredential.setSelectedAccountName(name);
         }
+    }
+
+    public String getRes(){
+
+        return "GO SLOWER";
+
     }
 
 }

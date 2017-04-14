@@ -1,10 +1,13 @@
 package com.gestion.textlater.textlater;
 
 import android.accounts.AccountManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.*;
+
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -22,7 +25,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.gestion.textlater.textlater.gmail.connection.GmailConnector;
+import com.gestion.textlater.textlater.gmail.connection.originalAuth;
 
+import static android.R.attr.value;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,10 +42,13 @@ public class MainActivity extends AppCompatActivity {
     boolean isOpen = false;
 
     GmailConnector gc;
+    public Handler handler;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +80,25 @@ public class MainActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+         handler = new Handler(Looper.getMainLooper()) {
+
+            public void handleMessage(android.os.Message msg){
+                if (msg.obj != null) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                    alertDialog.setTitle("SUCCESS");
+                    alertDialog.setMessage(msg.obj.toString());
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
+            };
+        };
+
+
 
         navView = (NavigationView) findViewById(R.id.navview);
         navView.setNavigationItemSelectedListener(
@@ -88,8 +115,10 @@ public class MainActivity extends AppCompatActivity {
                                //g myIntent.putExtra("key", value); //Optional parameters
                                 //MainActivity.this.startActivity(myIntent);
                                 try{
-                                    gc = new GmailConnector(MainActivity.this);
+                                    gc = new GmailConnector(MainActivity.this, handler);
                                     gc.tryAuth();
+ //                                   Intent myIntent = new Intent(MainActivity.this, originalAuth.class);
+ //                                   MainActivity.this.startActivity(myIntent);
 
                                 }catch(Exception e){
                                     AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -106,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 break;
                             case R.id.nav_nosotros:
+
                                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                                 alertDialog.setTitle("Información General: ");
                                 alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");

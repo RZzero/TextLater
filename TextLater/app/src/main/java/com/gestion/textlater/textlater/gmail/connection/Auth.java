@@ -31,7 +31,7 @@ public class Auth {
 
     private static final String PREF_ACCOUNT_NAME = "accountName";
 
-    private static final String[] SCOPES = {GmailScopes.MAIL_GOOGLE_COM};
+    private static final String[] SCOPES = {GmailScopes.GMAIL_READONLY};
 
     private Handler handler;
 
@@ -48,6 +48,7 @@ public class Auth {
         if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         }
+        new PermissionRequest(mCredential,app).execute();
     }
 
     String getPrefAccountName(){
@@ -91,12 +92,6 @@ public class Auth {
             editor.apply();
             mCredential.setSelectedAccountName(name);
         }
-    }
-
-    public String getRes(){
-
-        return "GO SLOWER";
-
     }
 
 }

@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
             };
         };
 
+        gc = new GmailConnector(MainActivity.this);
 
 
         navView = (NavigationView) findViewById(R.id.navview);
@@ -115,7 +116,6 @@ public class MainActivity extends AppCompatActivity {
                                //g myIntent.putExtra("key", value); //Optional parameters
                                 //MainActivity.this.startActivity(myIntent);
                                 try{
-                                    gc = new GmailConnector(MainActivity.this, handler);
                                     gc.tryAuth();
  //                                   Intent myIntent = new Intent(MainActivity.this, originalAuth.class);
  //                                   MainActivity.this.startActivity(myIntent);
@@ -135,17 +135,18 @@ public class MainActivity extends AppCompatActivity {
 
                                 break;
                             case R.id.nav_nosotros:
+                                gc.getUserInformation(handler);
 
-                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                                alertDialog.setTitle("Información General: ");
-                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
-                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                alertDialog.show();
+//                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+//                                alertDialog.setTitle("Información General: ");
+//                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
+//                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                                        new DialogInterface.OnClickListener() {
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                dialog.dismiss();
+//                                            }
+//                                        });
+//                                alertDialog.show();
 
                                 break;
                             case R.id.nav_sendFeedBack:

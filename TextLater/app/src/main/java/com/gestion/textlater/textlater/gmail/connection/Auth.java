@@ -35,7 +35,7 @@ public class Auth {
 
     private Handler handler;
 
-    Auth(AppCompatActivity app, Handler handler){
+    Auth(AppCompatActivity app){
         this.app = app;
         this.handler = handler;
 
@@ -48,7 +48,6 @@ public class Auth {
         if (mCredential.getSelectedAccountName() == null) {
             chooseAccount();
         }
-        new Request(mCredential,app,handler).execute();
     }
 
     String getPrefAccountName(){

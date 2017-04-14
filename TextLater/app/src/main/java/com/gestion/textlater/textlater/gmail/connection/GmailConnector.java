@@ -13,9 +13,9 @@ public class GmailConnector{
     private AppCompatActivity app;
     Request req;
 
-    public GmailConnector(AppCompatActivity app, Handler handler){
+    public GmailConnector(AppCompatActivity app){
         this.app = app;
-        auth = new Auth(app,handler);
+        auth = new Auth(app);
     }
 
 
@@ -48,6 +48,16 @@ public class GmailConnector{
 
     public void named(String name){
         auth.name(name);
+    }
+
+    public void getUserInformation(Handler handler){
+        try{
+            new Request(auth.getCredentials(),app,handler).execute();
+        }catch (Exception e){
+            auth.tryAuth();
+            getUserInformation(handler);
+        }
+
     }
 
 }

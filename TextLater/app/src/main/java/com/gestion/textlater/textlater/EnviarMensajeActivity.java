@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.Image;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -311,7 +312,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
     class RetrieveFeedTask extends AsyncTask<File, Void, Void> {
 
         private Exception exception;
-        String url ="http://httpbin.org/post"; //"http://posttestserver.com/post.php?dir=holiboli";
+        String url = "http://httpbin.org/post"; //"http://posttestserver.com/post.php?dir=holiboli";
 
         protected Void doInBackground(File... file) {
             try {
@@ -428,6 +429,8 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         if (id == R.id.action_settings_cerrar_envioMensaje) {
             finish();
         } else {
+
+            //MENU PARA SELECCIONAR LOS ARCHIVOS, Y ATRIBUTOS PARA LA SELECCION
             DialogProperties properties = new DialogProperties();
             //MULTIPLE SELECTION
             properties.selection_mode = DialogConfigs.MULTI_MODE;
@@ -436,30 +439,69 @@ public class EnviarMensajeActivity extends AppCompatActivity {
             properties.error_dir = new File(DialogConfigs.DEFAULT_DIR);
             properties.offset = new File(DialogConfigs.DEFAULT_DIR);
             properties.extensions = null;
+
+            //Muetra el cuadro de seleccion de archivos
             dialog = new FilePickerDialog(this, properties);
             dialog.setTitle("Select a File");
             dialog.setDialogSelectionListener(new DialogSelectionListener() {
                 @Override
                 public void onSelectedFilePaths(String[] files) {
                     //files is the array of the paths of files selected by the Application User.
-                    filesPath = files;
-                    String toastMessage = filesPath.length + " archivos seleccionados";
-                    filesStream = new File[filesPath.length];
-                    //HOLA FILES
+                    filesPath = files; //Obtengo el arreglo de las rutas relativas de cada archivo
+
+                    //Arraylist temporal para verificar cuales archivos son validos y cuales no.
+                    ArrayList<File> temp = new ArrayList<>();
+                    //variable para contar los archivos que no fueron seleccionados.
+                    int archivosNoAdmitidos = 0;
+
+                    //Nombre de los archivos
                     String[] tempFiles = new String[filesPath.length];
+
                     for (int i = 0; i < tempFiles.length; i++) {
 
-                        filesStream[i] = new File(Environment.getExternalStorageDirectory(),
-                                filesPath[i]);
-                        tempFiles[i] = filesStream[i].getName();
-                        Log.d("file:", filesStream[i].getName());
+                        //Archivo temporal
+                        File arc = new File(Uri.parse(filesPath[i]).getPath());
+
+                        //conversion a MB del tamaño del archivo y verificacion de que no exeda los 10 MB.
+                        if (((((float) arc.length()) / (float) 1024) / (float) 1024) <= 10.0) {
+                            //agregar el archivo al arreglo temporal
+                            temp.add(arc);
+                        } else {
+                            //aumentar contador de archivos invalidos
+                            archivosNoAdmitidos++;
+                        }
+                        //guarda el nombre de los archvis
+                        tempFiles[i] = arc.getName();
+                        //log de prueba
+                        Log.d("file:", arc.getName());
                     }
 
+                    //Inicializa el arreglo de archivos
+                    filesStream = new File[temp.size()];
+
+                    //asigna los archivos al arreglo
+                    for (int i = 0; i < temp.size(); i++) {
+                        filesStream[i] = temp.get(i);
+                    }
+
+                    //Asigna el arreglo de nombre de archivos para el adapter para el recyclerview
                     myDataset[0] = tempFiles;
 
+                    //Crea el adaptador
                     mAdapter = new FileAdapter(myDataset[0]);
+                    //asigna el contenido al recyclerview
                     mRecyclerView.setAdapter(mAdapter);
+                    //Hace visible los cambios
                     mAdapter.notifyDataSetChanged();
+
+                    //mensaje de retroalimentacion al usuario
+                    String toastMessage = filesPath.length + " archivos seleccionados";
+                    //Notifica si hubo algun archivo no permitido
+                    if (archivosNoAdmitidos > 0) {
+                        toastMessage += ", " + archivosNoAdmitidos + "archivos sobrepasan los 10MB.";
+                    }
+
+                    //Muestra el mensaje
                     Toast.makeText(EnviarMensajeActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
                 }
             });

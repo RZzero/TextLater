@@ -1,14 +1,15 @@
 package com.gestion.textlater.textlater;
 
+import android.accounts.AccountManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.os.*;
+
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -17,23 +18,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Toast;
 
-import com.github.angads25.filepicker.controller.DialogSelectionListener;
-import com.github.angads25.filepicker.model.DialogConfigs;
-import com.github.angads25.filepicker.model.DialogProperties;
-import com.github.angads25.filepicker.view.FilePickerDialog;
-
-import java.io.File;
+import com.gestion.textlater.textlater.gmail.connection.GmailConnector;
+import com.gestion.textlater.textlater.gmail.connection.originalAuth;
 
 import static android.R.attr.value;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +40,15 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabEnviar, fabGmail, fabTelegram;
     Animation FabOpen, FabClose, FabRClockwise, FabRantiClockwise;
     boolean isOpen = false;
+
+    GmailConnector gc;
+    public Handler handler;
+
+    static final int REQUEST_ACCOUNT_PICKER = 1000;
+    static final int REQUEST_AUTHORIZATION = 1001;
+    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
 
+
         appbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(appbar);
 
@@ -75,6 +79,26 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+         handler = new Handler(Looper.getMainLooper()) {
+
+            public void handleMessage(android.os.Message msg){
+                if (msg.obj != null) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                    alertDialog.setTitle("SUCCESS");
+                    alertDialog.setMessage(msg.obj.toString());
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                }
+            };
+        };
+
+        gc = new GmailConnector(MainActivity.this);
 
 
         navView = (NavigationView) findViewById(R.id.navview);
@@ -88,21 +112,41 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (menuItem.getItemId()) {
                             case R.id.nav_configuracion:
-                                Intent myIntent = new Intent(MainActivity.this, PrincipalActivity.class);
+                                //Intent myIntent = new Intent(MainActivity.this, PrincipalActivity.class);
                                //g myIntent.putExtra("key", value); //Optional parameters
-                                MainActivity.this.startActivity(myIntent);
+                                //MainActivity.this.startActivity(myIntent);
+                                try{
+                                    gc.tryAuth();
+ //                                   Intent myIntent = new Intent(MainActivity.this, originalAuth.class);
+ //                                   MainActivity.this.startActivity(myIntent);
+
+                                }catch(Exception e){
+                                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                                    alertDialog.setTitle("Error");
+                                    alertDialog.setMessage(e.getMessage());
+                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                    alertDialog.show();
+                                }
+
                                 break;
                             case R.id.nav_nosotros:
-                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                                alertDialog.setTitle("Información General: ");
-                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
-                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                alertDialog.show();
+                                gc.getUserInformation(handler);
+
+//                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+//                                alertDialog.setTitle("Información General: ");
+//                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
+//                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                                        new DialogInterface.OnClickListener() {
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                dialog.dismiss();
+//                                            }
+//                                        });
+//                                alertDialog.show();
 
                                 break;
                             case R.id.nav_sendFeedBack:
@@ -219,6 +263,44 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case REQUEST_GOOGLE_PLAY_SERVICES:
+                if (resultCode != RESULT_OK) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                    alertDialog.setTitle("Error");
+                    alertDialog.setMessage("Esta app requiere de Google Play Services.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                } else {
+                    gc.tryAuth();
+                }
+                break;
+            case REQUEST_ACCOUNT_PICKER:
+                if (resultCode == RESULT_OK && data != null &&
+                        data.getExtras() != null) {
+                    gc.named(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
+                    gc.tryAuth();
+                }
+                break;
+            case REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK) {
+                    gc.tryAuth();
+                }
+                break;
+        }
+    }
+
+
 
 
 

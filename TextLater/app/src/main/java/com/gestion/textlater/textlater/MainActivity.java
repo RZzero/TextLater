@@ -25,7 +25,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import com.gestion.textlater.textlater.gmail.connection.GmailConnector;
-import com.gestion.textlater.textlater.gmail.connection.originalAuth;
 
 import static android.R.attr.value;
 
@@ -115,38 +114,32 @@ public class MainActivity extends AppCompatActivity {
                                 //Intent myIntent = new Intent(MainActivity.this, PrincipalActivity.class);
                                //g myIntent.putExtra("key", value); //Optional parameters
                                 //MainActivity.this.startActivity(myIntent);
-                                try{
-                                    gc.tryAuth();
- //                                   Intent myIntent = new Intent(MainActivity.this, originalAuth.class);
- //                                   MainActivity.this.startActivity(myIntent);
 
-                                }catch(Exception e){
-                                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                                    alertDialog.setTitle("Error");
-                                    alertDialog.setMessage(e.getMessage());
-                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
-                                                }
-                                            });
-                                    alertDialog.show();
-                                }
+                                gc.tryAuth();
+                                AlertDialog testtt = new AlertDialog.Builder(MainActivity.this).create();
+                                testtt.setTitle("Mail");
+                                testtt.setMessage(gc.getUserMail());
+                                testtt.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                testtt.show();
 
                                 break;
                             case R.id.nav_nosotros:
-                                gc.getUserInformation(handler);
 
-//                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-//                                alertDialog.setTitle("Información General: ");
-//                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
-//                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-//                                        new DialogInterface.OnClickListener() {
-//                                            public void onClick(DialogInterface dialog, int which) {
-//                                                dialog.dismiss();
-//                                            }
-//                                        });
-//                                alertDialog.show();
+                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                                alertDialog.setTitle("Información General: ");
+                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.show();
 
                                 break;
                             case R.id.nav_sendFeedBack:

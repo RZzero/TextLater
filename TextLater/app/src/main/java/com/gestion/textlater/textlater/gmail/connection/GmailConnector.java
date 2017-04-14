@@ -50,6 +50,10 @@ public class GmailConnector{
         auth.name(name);
     }
 
+    public String getUserMail(){
+        return auth.getCredentials().getSelectedAccountName();
+    }
+
     public void getUserInformation(Handler handler){
         try{
             new Request(auth.getCredentials(),app,handler).execute();

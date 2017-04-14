@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -38,13 +39,28 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.ClientProtocolException;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.entity.InputStreamEntity;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
 
 import static android.R.attr.id;
 import static android.R.attr.theme;
@@ -59,6 +75,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
     int year_x, month_x, day_x, hour_y, min_y, sec_y;
     static final int DIALOG_ID = 0, DIALOG_ID2 = 1;
     private String[] filesPath;
+    private File[] filesStream;
 
     EditText mAsunto, mDestinatario, mMensaje;
     Message Mensaje;
@@ -110,7 +127,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         filesPath = new String[]{"empty"};
-
+        filesStream = new File[]{};
         //FILE
 
         mRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -202,7 +219,12 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                                     } else {
                                         //POST THE MESSAGE
                                         if (!mAsunto.getText().equals("") && !mDestinatario.getText().equals("") && !mMensaje.getText().equals("")) {
-                                            MakeHttpRequest();
+                                            if (filesStream.length > 0) {
+                                                MakeFileHttpRequest();
+                                            } else {
+                                                MakeHttpRequest();
+                                            }
+
                                         } else {
                                             Toast.makeText(getApplicationContext(), "Rellene los campos.", Toast.LENGTH_SHORT).show();
                                         }
@@ -274,6 +296,45 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         EditText Asunto = (EditText) findViewById(R.id.Mensaje_asunto_editText);
         if (!asunto) {
             Asunto.setVisibility(View.GONE);
+        }
+    }
+
+    private void MakeFileHttpRequest() {
+        String url = "http://posttestserver.com/post.php";
+        for (int i = 0; i < filesStream.length; i++) {
+            File file = new File(filesPath[i]);
+            new RetrieveFeedTask().execute(file);
+        }
+    }
+
+
+    class RetrieveFeedTask extends AsyncTask<File, Void, Void> {
+
+        private Exception exception;
+        String url ="http://httpbin.org/post"; //"http://posttestserver.com/post.php?dir=holiboli";
+
+        protected Void doInBackground(File... file) {
+            try {
+                HttpClient httpclient = new DefaultHttpClient();
+
+                HttpPost httppost = new HttpPost(url);
+
+                InputStreamEntity reqEntity = new InputStreamEntity(new FileInputStream(file[0]), -1);
+                reqEntity.setContentType("binary/octet-stream");
+                reqEntity.setChunked(true); // Send in multiple parts if needed
+                httppost.setEntity(reqEntity);
+                HttpResponse response = httpclient.execute(httppost);
+                //Do something with response...
+                Log.d("response:", response.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        protected void onPostExecute() {
+            // TODO: check this.exception
+            // TODO: do something with the feed
         }
     }
 
@@ -383,16 +444,18 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                     //files is the array of the paths of files selected by the Application User.
                     filesPath = files;
                     String toastMessage = filesPath.length + " archivos seleccionados";
-
+                    filesStream = new File[filesPath.length];
                     //HOLA FILES
                     String[] tempFiles = new String[filesPath.length];
-                    for(int i = 0; i < tempFiles.length; i++){
-                        String[] namePath = filesPath[i].split("/");
-                        tempFiles[i] = namePath[namePath.length-1];
+                    for (int i = 0; i < tempFiles.length; i++) {
+
+                        filesStream[i] = new File(Environment.getExternalStorageDirectory(),
+                                filesPath[i]);
+                        tempFiles[i] = filesStream[i].getName();
+                        Log.d("file:", filesStream[i].getName());
                     }
 
                     myDataset[0] = tempFiles;
-
 
                     mAdapter = new FileAdapter(myDataset[0]);
                     mRecyclerView.setAdapter(mAdapter);

@@ -41,6 +41,9 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
@@ -71,6 +74,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.R.attr.id;
+import static android.R.attr.name;
 import static android.R.attr.theme;
 import static android.R.id.message;
 import static com.gestion.textlater.textlater.R.id.fab;
@@ -78,7 +82,7 @@ import static com.gestion.textlater.textlater.R.id.subject_TextView;
 import static com.gestion.textlater.textlater.R.string.Asunto;
 
 public class EnviarMensajeActivity extends AppCompatActivity {
-
+    static String nameID;
     boolean asunto, timeEdited, dateEdited;
     int year_x, month_x, day_x, hour_y, min_y, sec_y;
     static final int DIALOG_ID = 0, DIALOG_ID2 = 1;
@@ -228,7 +232,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                                         //POST THE MESSAGE
                                         if (!mAsunto.getText().equals("") && !mDestinatario.getText().equals("") && !mMensaje.getText().equals("")) {
                                             if (filesStream.length > 0) {
-                                                MakeFileHttpRequest();
+                                                MakeFirstHttpRequest();
                                             } else {
                                                 MakeHttpRequest();
                                             }
@@ -307,12 +311,16 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         }
     }
 
-    private void MakeFileHttpRequest() {
-        String url = "http://posttestserver.com/post.php";
+    private void MakeSecondHttpRequest(String id) {
+
         for (int i = 0; i < filesStream.length; i++) {
             File file = new File(filesPath[i]);
+            nameID = id + " -- "+ file.getName();
+            Log.e("id:", nameID);
+            Log.e("NAME FILE:", file.getName());
             new RetrieveFeedTask().execute(file);
         }
+
     }
 
     public static String getMimeType(String url) {
@@ -323,6 +331,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         }
         return type;
     }
+
     class RetrieveFeedTask extends AsyncTask<File, Void, Void> {
 
         private Exception exception;
@@ -330,15 +339,16 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         private final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
         private final MediaType MEDIA_TYPE_SOMETHING = MediaType.parse("");
         private final OkHttpClient client = new OkHttpClient();
+
         protected Void doInBackground(File... file) {
             try {
-
+                Log.e("name did change?:", nameID);
                 MediaType MEDIA_TYPE_SOMETHING = MediaType.parse(getMimeType(file[0].getPath()));
                 // Use the imgur image upload API as documented at https://api.imgur.com/endpoints/image
                 RequestBody requestBody = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
-                        .addFormDataPart("image", file[0].getName(),
-                                RequestBody.create(MEDIA_TYPE_SOMETHING,file[0]))
+                        .addFormDataPart("image", nameID,
+                                RequestBody.create(MEDIA_TYPE_SOMETHING, file[0]))
                         .build();
 
                 Request request = new Request.Builder()
@@ -360,6 +370,70 @@ public class EnviarMensajeActivity extends AppCompatActivity {
             // TODO: check this.exception
             // TODO: do something with the feed
         }
+    }
+
+
+    private void MakeFirstHttpRequest() {
+
+          /* @platform
+        * @sender
+        * @ToM
+        * @subject
+        * @content
+        * @timeToSend
+        * @messageStatus
+        * */
+        RequestParams params = new RequestParams();
+        params.put("platform", Mensaje.getPlatform().toString());
+        params.put("sender", Mensaje.getSender().toString());
+        params.put("ToM", Mensaje.getToM().toString());
+        params.put("subject", Mensaje.getSubject().toString());
+        params.put("content", Mensaje.getContent().toString());
+        params.put("timeToSend", Mensaje.getTimeToSend().toString());
+        params.put("messageStatus", Mensaje.getMessageStatus().toString());
+
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.post("http://52.36.200.87:80/api/v1/message/", params, new AsyncHttpResponseHandler() {
+
+            @Override
+            public void onStart() {
+                // called before request is started
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                // called when response HTTP status is "200 OK"
+                finish();
+                Log.d("holiboli:", headers.toString());
+                String str = "";
+                String id = "NONNULL";
+                try {
+                    str = new String(response, "UTF-8");
+                    /*JSONArray idArray = new JSONArray(str);
+                    if (idArray.length() > 0) {
+                        JSONObject idObject = (JSONObject) idArray.get(0);
+                        id = idObject.getString("id");
+                    }*/
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } /*catch (JSONException e) {
+                    e.printStackTrace();
+                }*/
+                Log.e("GOLA:", str);
+                MakeSecondHttpRequest(id);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                //called when response HTTP status is "4XX" (eg. 401, 403, 404)
+            }
+
+            @Override
+            public void onRetry(int retryNo) {
+                // called when request is retried
+            }
+        });
     }
 
     private void MakeHttpRequest() {
@@ -395,7 +469,13 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                 // called when response HTTP status is "200 OK"
                 finish();
                 Log.d("holiboli:", headers.toString());
-                Log.e("GOLA:", response.toString());
+                String str = "";
+                try {
+                    str = new String(response, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Log.e("GOLA:", str);
             }
 
             @Override

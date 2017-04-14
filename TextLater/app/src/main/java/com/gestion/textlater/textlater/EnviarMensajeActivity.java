@@ -278,7 +278,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
     private void giveDateFormat() {
         datePI = year_x + "-";
-        datePI += month_x + "-";
+        datePI += (month_x+1) + "-";
         datePI += day_x + " ";
     }
 
@@ -344,6 +344,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
             try {
                 Log.e("name did change?:", nameID);
                 String nameFile = nameID +"--"+file[0].getName();
+                Log.e("name did change?:", nameFile);
                 Log.e("name did change?:", nameFile);
 
                 MediaType MEDIA_TYPE_SOMETHING = MediaType.parse(getMimeType(file[0].getPath()));

@@ -1,5 +1,6 @@
 package com.gestion.textlater.textlater;
 
+import android.accounts.AccountManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,7 +21,7 @@ import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
-import com.gestion.textlater.textlater.gmail.connection.Auth;
+import com.gestion.textlater.textlater.gmail.connection.GmailConnector;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -34,6 +35,12 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabEnviar, fabGmail, fabTelegram;
     Animation FabOpen, FabClose, FabRClockwise, FabRantiClockwise;
     boolean isOpen = false;
+
+    GmailConnector gc;
+
+    static final int REQUEST_ACCOUNT_PICKER = 1000;
+    static final int REQUEST_AUTHORIZATION = 1001;
+    static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
         tabLayout.setupWithViewPager(viewPager);
+
 
 
         appbar = (Toolbar) findViewById(R.id.toolbar);
@@ -79,7 +87,23 @@ public class MainActivity extends AppCompatActivity {
                                 //Intent myIntent = new Intent(MainActivity.this, PrincipalActivity.class);
                                //g myIntent.putExtra("key", value); //Optional parameters
                                 //MainActivity.this.startActivity(myIntent);
-                                Auth.tryAuth(MainActivity.this);
+                                try{
+                                    gc = new GmailConnector(MainActivity.this);
+                                    gc.tryAuth();
+
+                                }catch(Exception e){
+                                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                                    alertDialog.setTitle("Error");
+                                    alertDialog.setMessage(e.getMessage());
+                                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+                                    alertDialog.show();
+                                }
+
                                 break;
                             case R.id.nav_nosotros:
                                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -209,6 +233,44 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case REQUEST_GOOGLE_PLAY_SERVICES:
+                if (resultCode != RESULT_OK) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+                    alertDialog.setTitle("Error");
+                    alertDialog.setMessage("Esta app requiere de Google Play Services.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    alertDialog.show();
+                } else {
+                    gc.tryAuth();
+                }
+                break;
+            case REQUEST_ACCOUNT_PICKER:
+                if (resultCode == RESULT_OK && data != null &&
+                        data.getExtras() != null) {
+                    gc.named(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
+                    gc.tryAuth();
+                }
+                break;
+            case REQUEST_AUTHORIZATION:
+                if (resultCode == RESULT_OK) {
+                    gc.tryAuth();
+                }
+                break;
+        }
+    }
+
+
 
 
 

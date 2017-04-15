@@ -103,6 +103,8 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
     String[][] myDataset = null;
 
+
+    boolean messageSent = true;
     //Listeners for the Dialogs to get the input from the user
     //Date listener
     private DatePickerDialog.OnDateSetListener dpickerListener = new DatePickerDialog.OnDateSetListener() {
@@ -244,8 +246,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                                         //clear();
                                     }
                                 }
-                            }
-                            else{
+                            } else {
                                 if ((!mAsunto.getText().equals("") && !mDestinatario.getText().equals("") && !mMensaje.getText().equals("")) || filesStream.length > 0) {
                                     if (filesStream.length > 0) {
                                         MakeFirstHttpRequest();
@@ -387,6 +388,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         protected void onPostExecute() {
             // TODO: check this.exception
             // TODO: do something with the feed
+
         }
     }
 
@@ -530,6 +532,9 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
+        if (messageSent) {
+            Toast.makeText(EnviarMensajeActivity.this, "Mensaje agendado.", Toast.LENGTH_SHORT).show();
+        }
         super.finish();
     }
 
@@ -550,6 +555,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
 
         if (id == R.id.action_settings_cerrar_envioMensaje) {
+            messageSent = false;
             finish();
         } else {
 

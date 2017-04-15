@@ -43,13 +43,13 @@
 
         </LinearLayout>
 
-        <Button
+        <ImageButton
             android:id="@+id/platform_Button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4.57"
             android:descendantFocusability="blocksDescendants"
-            android:text="G" />
+            android:src="@drawable/gmail_message" />
 
     </LinearLayout>
 

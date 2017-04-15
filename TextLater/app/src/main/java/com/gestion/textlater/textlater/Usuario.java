@@ -1,12 +1,14 @@
 package com.gestion.textlater.textlater;
 
+import android.util.Log;
+
 /**
  * Created by kyonru on 8/04/17.
  */
 
 public class Usuario {
-    String nombre;
-    String imgUrl;
+    static String nombre;
+    static String imgUrl;
     UserPublicInformation info;
 
     public Usuario(String nombre, String imgUrl) {
@@ -19,6 +21,7 @@ public class Usuario {
         info.init();
         nombre = info.getNombreCmpleto();
         imgUrl = info.getUrlImage();
+        Log.e("hola", nombre+imgUrl);
     }
 
 

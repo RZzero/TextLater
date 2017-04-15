@@ -22,6 +22,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by kyonru on 15/04/17.
@@ -31,14 +34,14 @@ public class UserPublicInformation {
 
 
     public String getNombreCmpleto() {
-        return nombreCmpleto;
+        return this.nombreCmpleto;
     }
 
     public String getUrlImage() {
-        return urlImage;
+        return this.urlImage;
     }
 
-   static String nombreCmpleto;
+    static String nombreCmpleto;
     static String urlImage;
     final static String TEXTLATER_REQUEST_USER_DATA_URL = "http://picasaweb.google.com/data/entry/api/user/";
 
@@ -55,6 +58,15 @@ public class UserPublicInformation {
     private void setOtherUserData() {
         TextLaterAsyncTask task = new TextLaterAsyncTask();
         task.execute();
+        try {
+            task.get(1000, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     private class TextLaterAsyncTask extends AsyncTask<URL, Void, Usuario> {
@@ -92,6 +104,7 @@ public class UserPublicInformation {
 
             nombreCmpleto = usuario.getNombre();
             urlImage = usuario.getImgUrl();
+
         }
 
         /**
@@ -178,6 +191,7 @@ public class UserPublicInformation {
                 return null;
             }
 
+            Log.e("JSON:", earthquakeJSON);
             Usuario user = null;
             String nombre = "";
             String imageURL = "";

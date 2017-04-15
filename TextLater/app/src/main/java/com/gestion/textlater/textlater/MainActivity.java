@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     boolean isOpen = false;
 
     GmailConnector gc;
+    public static GmailConnector copyGC;
     public Handler handler;
 
     static final int REQUEST_ACCOUNT_PICKER = 1000;
@@ -102,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         //BORRAR
         gc.tryAuth();
 
+        copyGC = gc;
         navView = (NavigationView) findViewById(R.id.navview);
         navView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {

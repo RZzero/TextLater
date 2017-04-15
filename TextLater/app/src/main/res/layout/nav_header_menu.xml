@@ -25,13 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="Roberto Junior Amarante Calderon"
+        android:text="Your Name Goes Here"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
     <TextView
         android:id="@+id/correo_perfil_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="the.robert.007@gmail.com" />
+        android:text="youremail@gmail.com" />
 
 </LinearLayout>

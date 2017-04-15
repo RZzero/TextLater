@@ -75,7 +75,7 @@ public class ModificarActivity extends AppCompatActivity {
         String content = intent.getStringExtra("content");
         String timeToSend = intent.getStringExtra("timeToSend");
         String ToM = intent.getStringExtra("ToM");
-        Mensaje = new Message(idMessage, platform, sender, messageStatus, subject, content, timeToSend,ToM);
+        Mensaje = new Message(idMessage, platform, sender,ToM, subject, content, timeToSend,messageStatus);
 
 //        getValues();
 //
@@ -277,7 +277,7 @@ public class ModificarActivity extends AppCompatActivity {
         mMensaje = (EditText) findViewById(R.id.Mensaje_editText);
         Mensaje.setContent(mMensaje.getText().toString());
 
-        mUsuario = "the.robert.007@gmail.com";
+        mUsuario = MainActivity.copyGC.getUserMail();
         Mensaje.setSender(mUsuario);
 
         mDate = datePI + hours;

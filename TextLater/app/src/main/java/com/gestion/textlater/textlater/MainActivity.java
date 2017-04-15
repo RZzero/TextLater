@@ -318,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.e("AYUDA!", nombreCmpleto + urlImage);
-        Log.e("dasdasdsad","dasdas");
+        Log.e("dasdasdsad", "dasdas");
 
     }
 
@@ -331,6 +331,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected Bitmap doInBackground(String... urls) {
             String urldisplay = urls[0];
+            Log.e("URL:", urldisplay);
             Bitmap mIcon11 = null;
             try {
                 InputStream in = new java.net.URL(urldisplay).openStream();
@@ -344,10 +345,8 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(Bitmap result) {
             bmImage.setImageBitmap(result);
-
         }
     }
-
 
 
     private class TextLaterAsyncTask extends AsyncTask<URL, Void, Usuario> {
@@ -386,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
             nombreCmpleto = usuario.getNombre();
             urlImage = usuario.getImgUrl();
             Log.e("nombre", nombreCmpleto);
-            Log.e("image", urlImage);
+            Log.e("imageasddsd", urlImage);
             NavigationView navigationView = (NavigationView) findViewById(R.id.navview);
             View hView = navigationView.getHeaderView(0);
 
@@ -396,13 +395,9 @@ public class MainActivity extends AppCompatActivity {
             TextView nav_email = (TextView) hView.findViewById(R.id.correo_perfil_textView);
             nav_email.setText(gc.getUserMail());
 
-        ImageView nav_image = (ImageView) hView.findViewById(R.id.Perfil_imageView);
-        try {
+            ImageView nav_image = (ImageView) hView.findViewById(R.id.Perfil_imageView);
             new DownloadImageTask(nav_image)
-                    .execute(java.net.URLEncoder.encode(UserPublicInformation.urlImage, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+                    .execute(urlImage);
 
         }
 

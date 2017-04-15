@@ -45,7 +45,7 @@ public class HistorialFragment extends Fragment {
 
     View view;
     private String TEXTLATER_REQUEST_MESSAGES_URL =
-            "http://52.36.200.87/api/v1/message/mymessages?sender=the.robert.007@gmail.com";
+            "http://52.36.200.87/api/v1/message/mymessages?sender=" + MainActivity.copyGC.getUserMail();
 
     public HistorialFragment() {
         // Required empty public constructor
@@ -217,7 +217,8 @@ public class HistorialFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+        TEXTLATER_REQUEST_MESSAGES_URL =
+                "http://52.36.200.87/api/v1/message/mymessages?sender=" + MainActivity.copyGC.getUserMail();
         view = inflater.inflate(R.layout.list, container, false);
         mensajes = new ArrayList<>();
         TextLaterAsyncTask task = new TextLaterAsyncTask();
@@ -237,7 +238,8 @@ public class HistorialFragment extends Fragment {
         ListView  listView = (ListView) view.findViewById(R.id.list);
 
         listView.setAdapter(adapter);
-
+        //Hace visible los cambios
+      //  adapter.notifyDataSetChanged();
         //Listener for catching the touch when the user wants to here the pronunciation of the word.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

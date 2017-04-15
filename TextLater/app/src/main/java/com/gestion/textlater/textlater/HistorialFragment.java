@@ -239,7 +239,7 @@ public class HistorialFragment extends Fragment {
 
         listView.setAdapter(adapter);
         //Hace visible los cambios
-      //  adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
         //Listener for catching the touch when the user wants to here the pronunciation of the word.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

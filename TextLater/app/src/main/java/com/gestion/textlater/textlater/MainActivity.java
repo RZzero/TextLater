@@ -175,26 +175,14 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             case R.id.nav_nosotros:
 
-                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                                alertDialog.setTitle("Información General: ");
-                                if (userGmailLogged) {
-                                    alertDialog.setMessage("Logged");
-                                } else {
-                                    alertDialog.setMessage("Not Logged");
-                                }
-
-                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-                                alertDialog.show();
-
-
 //                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
 //                                alertDialog.setTitle("Información General: ");
-//                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
+//                                if (userGmailLogged) {
+//                                    alertDialog.setMessage("Logged");
+//                                } else {
+//                                    alertDialog.setMessage("Not Logged");
+//                                }
+//
 //                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
 //                                        new DialogInterface.OnClickListener() {
 //                                            public void onClick(DialogInterface dialog, int which) {
@@ -202,6 +190,18 @@ public class MainActivity extends AppCompatActivity {
 //                                            }
 //                                        });
 //                                alertDialog.show();
+
+
+                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                                alertDialog.setTitle("Información General: ");
+                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                alertDialog.show();
 
                                 break;
                             case R.id.nav_sendFeedBack:

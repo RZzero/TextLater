@@ -22,10 +22,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.gestion.textlater.textlater.gmail.connection.GmailConnector;
 
 import static android.R.attr.value;
+import static com.gestion.textlater.textlater.R.layout.item;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -100,11 +102,11 @@ public class MainActivity extends AppCompatActivity {
         };
 
         gc = new GmailConnector(MainActivity.this);
-        try{
+        try {
             userGmailLogged = MainActivity.this.getPreferences(Context.MODE_PRIVATE).getString("accountName", null).length() > 3;
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             userGmailLogged = false;
         }
 
@@ -144,9 +146,9 @@ public class MainActivity extends AppCompatActivity {
 
                                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                                 alertDialog.setTitle("Información General: ");
-                                if (userGmailLogged){
+                                if (userGmailLogged) {
                                     alertDialog.setMessage("Logged");
-                                } else{
+                                } else {
                                     alertDialog.setMessage("Not Logged");
                                 }
 
@@ -157,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         });
                                 alertDialog.show();
-
 
 
 //                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
@@ -239,8 +240,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     public void telegramEnviar(View view) {
        /* Intent i = new Intent(MainActivity.this, EnviarMensajeActivity.class);
         i.putExtra("id", "telegram");
@@ -259,12 +258,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void gmailEnviar(View view) {
-        Intent i = new Intent(MainActivity.this, EnviarMensajeActivity.class);
-        i.putExtra("id", "gmail");
-        if (gc.getUserMail() != null) {
-            i.putExtra("email", gc.getUserMail());
+
+        if (userGmailLogged) {
+            Intent i = new Intent(MainActivity.this, EnviarMensajeActivity.class);
+            i.putExtra("id", "gmail");
+            if (gc.getUserMail() != null) {
+                i.putExtra("email", gc.getUserMail());
+            }
+            startActivity(i);
         }
-        startActivity(i);
+        else{
+            //Muestra el mensaje
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.NotLogged), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -319,6 +325,7 @@ public class MainActivity extends AppCompatActivity {
                         data.getExtras() != null) {
                     gc.named(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
                     gc.tryAuth();
+                    userGmailLogged = true;
                 }
                 break;
             case REQUEST_AUTHORIZATION:

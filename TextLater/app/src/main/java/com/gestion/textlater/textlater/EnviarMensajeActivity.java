@@ -222,7 +222,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                         } else {
                             if (day_x < cal.get(Calendar.getInstance().DAY_OF_MONTH)) {
                                 Toast.makeText(getApplicationContext(), "Dia invalido.", Toast.LENGTH_SHORT).show();
-                            } else {
+                            } else if (day_x == cal.get(Calendar.getInstance().DAY_OF_MONTH)) {
                                 if (hour_y < cal.get(Calendar.getInstance().HOUR_OF_DAY)) {
                                     Toast.makeText(getApplicationContext(), "Hora invalida.", Toast.LENGTH_SHORT).show();
                                 } else {
@@ -230,10 +230,11 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                                         Toast.makeText(getApplicationContext(), "Minuto invalido.", Toast.LENGTH_SHORT).show();
                                     } else {
                                         //POST THE MESSAGE
-                                        if (!mAsunto.getText().equals("") && !mDestinatario.getText().equals("") && !mMensaje.getText().equals("")) {
+                                        if ((!mAsunto.getText().equals("") && !mDestinatario.getText().equals("") && !mMensaje.getText().equals("")) || filesStream.length > 0) {
                                             if (filesStream.length > 0) {
                                                 MakeFirstHttpRequest();
                                             } else {
+
                                                 MakeHttpRequest();
                                             }
 
@@ -242,6 +243,19 @@ public class EnviarMensajeActivity extends AppCompatActivity {
                                         }
                                         //clear();
                                     }
+                                }
+                            }
+                            else{
+                                if ((!mAsunto.getText().equals("") && !mDestinatario.getText().equals("") && !mMensaje.getText().equals("")) || filesStream.length > 0) {
+                                    if (filesStream.length > 0) {
+                                        MakeFirstHttpRequest();
+                                    } else {
+
+                                        MakeHttpRequest();
+                                    }
+
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Rellene los campos.", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         }
@@ -278,7 +292,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
     private void giveDateFormat() {
         datePI = year_x + "-";
-        datePI += (month_x+1) + "-";
+        datePI += (month_x + 1) + "-";
         datePI += day_x + " ";
     }
 
@@ -343,7 +357,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         protected Void doInBackground(File... file) {
             try {
                 Log.e("name did change?:", nameID);
-                String nameFile = nameID +"--"+file[0].getName();
+                String nameFile = nameID + "--" + file[0].getName();
                 Log.e("name did change?:", nameFile);
                 Log.e("name did change?:", nameFile);
 
@@ -503,7 +517,7 @@ public class EnviarMensajeActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         mUsuario = i.getStringExtra("email");
-        Log.d("hola",mUsuario);
+        Log.d("hola", mUsuario);
         Mensaje.setSender(mUsuario);
 
         mDate = datePI + hours;

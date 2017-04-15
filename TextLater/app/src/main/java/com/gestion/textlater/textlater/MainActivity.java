@@ -212,6 +212,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
+
     public void telegramEnviar(View view) {
        /* Intent i = new Intent(MainActivity.this, EnviarMensajeActivity.class);
         i.putExtra("id", "telegram");

@@ -65,5 +65,5 @@
     <!-- Server Client ID.  This should be a valid Web OAuth 2.0 Client ID obtained
          from https://console.developers.google.com/ -->
     <string name="server_client_id">YOUR_SERVER_CLIENT_ID</string>
-
+    <string name="encuesta">https://docs.google.com/forms/d/e/1FAIpQLScmQffr9p2As0DdHIkQdEn9c7G7-B7tiUrB0xZkNnd2FcRzOA/viewform</string>
 </resources>

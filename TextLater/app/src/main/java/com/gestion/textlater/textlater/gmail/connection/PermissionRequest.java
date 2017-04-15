@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 
+import com.gestion.textlater.textlater.MainActivity;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -50,6 +51,7 @@ class PermissionRequest extends AsyncTask<Void, Void, String> {
 
         try {
             trygetInfo();
+            MainActivity.userGmailLogged = true;
         } catch (Exception e) {
             mLastError = e;
             cancel(true);

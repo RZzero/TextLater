@@ -1,6 +1,5 @@
 package com.gestion.textlater.textlater.gmail.connection;
 
-import com.gestion.textlater.textlater.MainActivity;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 
 import com.google.api.client.util.ExponentialBackOff;
@@ -8,11 +7,9 @@ import com.google.api.services.gmail.GmailScopes;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 
 import android.os.Handler;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.Arrays;

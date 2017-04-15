@@ -4,7 +4,6 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.*;
 
@@ -46,11 +45,11 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_ACCOUNT_PICKER = 1000;
     static final int REQUEST_AUTHORIZATION = 1001;
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
-
-
+    public static boolean userGmailLogged;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -98,7 +97,12 @@ public class MainActivity extends AppCompatActivity {
         };
 
         gc = new GmailConnector(MainActivity.this);
+        try{
+            userGmailLogged = MainActivity.this.getPreferences(Context.MODE_PRIVATE).getString("accountName", null).length() > 3;
 
+        }catch (Exception e){
+            userGmailLogged = false;
+        }
 
         navView = (NavigationView) findViewById(R.id.navview);
         navView.setNavigationItemSelectedListener(
@@ -132,7 +136,12 @@ public class MainActivity extends AppCompatActivity {
 
                                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                                 alertDialog.setTitle("Información General: ");
-                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
+                                if (userGmailLogged){
+                                    alertDialog.setMessage("Logged");
+                                } else{
+                                    alertDialog.setMessage("Not Logged");
+                                }
+
                                 alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                                         new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
@@ -140,6 +149,19 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         });
                                 alertDialog.show();
+
+
+
+//                                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+//                                alertDialog.setTitle("Información General: ");
+//                                alertDialog.setMessage("Miembros:\n\n\t\tClovis Ramírez\t\t\t\t\t\t\t1063120\n\t\tRafael Suazo\t\t\t\t\t\t\t\t1059627\n\t\tRoberto Amarante\t\t\t1060357\n");
+//                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+//                                        new DialogInterface.OnClickListener() {
+//                                            public void onClick(DialogInterface dialog, int which) {
+//                                                dialog.dismiss();
+//                                            }
+//                                        });
+//                                alertDialog.show();
 
                                 break;
                             case R.id.nav_sendFeedBack:

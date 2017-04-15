@@ -501,7 +501,9 @@ public class EnviarMensajeActivity extends AppCompatActivity {
         mMensaje = (EditText) findViewById(R.id.Mensaje_editText);
         Mensaje.setContent(mMensaje.getText().toString());
 
-        mUsuario = "the.robert.007@gmail.com";
+        Intent i = getIntent();
+        mUsuario = i.getStringExtra("email");
+        Log.d("hola",mUsuario);
         Mensaje.setSender(mUsuario);
 
         mDate = datePI + hours;

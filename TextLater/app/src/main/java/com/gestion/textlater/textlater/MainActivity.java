@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_GOOGLE_PLAY_SERVICES = 1002;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
 
-
         appbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(appbar);
 
@@ -79,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-         handler = new Handler(Looper.getMainLooper()) {
+        handler = new Handler(Looper.getMainLooper()) {
 
-            public void handleMessage(android.os.Message msg){
+            public void handleMessage(android.os.Message msg) {
                 if (msg.obj != null) {
                     AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
                     alertDialog.setTitle("SUCCESS");
@@ -94,11 +92,15 @@ public class MainActivity extends AppCompatActivity {
                             });
                     alertDialog.show();
                 }
-            };
+            }
+
+            ;
         };
 
         gc = new GmailConnector(MainActivity.this);
 
+        //BORRAR
+        gc.tryAuth();
 
         navView = (NavigationView) findViewById(R.id.navview);
         navView.setNavigationItemSelectedListener(
@@ -112,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                         switch (menuItem.getItemId()) {
                             case R.id.nav_configuracion:
                                 //Intent myIntent = new Intent(MainActivity.this, PrincipalActivity.class);
-                               //g myIntent.putExtra("key", value); //Optional parameters
+                                //g myIntent.putExtra("key", value); //Optional parameters
                                 //MainActivity.this.startActivity(myIntent);
 
                                 gc.tryAuth();
@@ -228,6 +230,9 @@ public class MainActivity extends AppCompatActivity {
     public void gmailEnviar(View view) {
         Intent i = new Intent(MainActivity.this, EnviarMensajeActivity.class);
         i.putExtra("id", "gmail");
+        if (gc.getUserMail() != null) {
+            i.putExtra("email", gc.getUserMail());
+        }
         startActivity(i);
     }
 
@@ -261,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(
             int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
+        switch (requestCode) {
             case REQUEST_GOOGLE_PLAY_SERVICES:
                 if (resultCode != RESULT_OK) {
                     AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -292,9 +297,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
-
-
-
 
 
 }

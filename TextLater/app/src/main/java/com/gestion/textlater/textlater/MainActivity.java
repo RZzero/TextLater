@@ -4,6 +4,8 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.*;
 
@@ -17,14 +19,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gestion.textlater.textlater.gmail.connection.GmailConnector;
+
+import java.io.InputStream;
 
 import static android.R.attr.value;
 import static com.gestion.textlater.textlater.R.layout.item;
@@ -102,6 +109,10 @@ public class MainActivity extends AppCompatActivity {
         };
 
         gc = new GmailConnector(MainActivity.this);
+        //BORRAR
+        gc.tryAuth();
+
+        copyGC = gc;
         try {
             userGmailLogged = MainActivity.this.getPreferences(Context.MODE_PRIVATE).getString("accountName", null).length() > 3;
 
@@ -110,10 +121,10 @@ public class MainActivity extends AppCompatActivity {
             userGmailLogged = false;
         }
 
-        //BORRAR
-        gc.tryAuth();
+        if(userGmailLogged){
+            navHeader();
+        }
 
-        copyGC = gc;
         navView = (NavigationView) findViewById(R.id.navview);
         navView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
@@ -273,6 +284,48 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    private void navHeader(){
+        Usuario user = new Usuario(" "," ");
+        user.setInformation();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navview);
+        View hView =  navigationView.getHeaderView(0);
+        TextView nav_user = (TextView)hView.findViewById(R.id.name_perfil_textView);
+        nav_user.setText(user.getNombre());
+
+        TextView nav_email = (TextView)hView.findViewById(R.id.correo_perfil_textView);
+        nav_email.setText(gc.getUserMail());
+
+        ImageView nav_image = (ImageView) hView.findViewById(R.id.Perfil_imageView);
+        new DownloadImageTask(nav_image)
+                .execute(user.getImgUrl());
+    }
+
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
+
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -326,6 +379,7 @@ public class MainActivity extends AppCompatActivity {
                     gc.named(data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME));
                     gc.tryAuth();
                     userGmailLogged = true;
+                    navHeader();
                 }
                 break;
             case REQUEST_AUTHORIZATION:

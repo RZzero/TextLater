@@ -45,7 +45,7 @@ public class MensajeAdapter extends ArrayAdapter<Message> {
         dateTextView.setText(message.getContent());
 
         if(message.getMessageStatus().equals("NS")){
-            listItemView.setBackgroundColor(Color.argb(100,217, 252, 219));
+            listItemView.setBackgroundColor(Color.argb(100,0, 150, 136));
         }
 
         return listItemView;
